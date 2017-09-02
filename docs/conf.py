@@ -31,7 +31,9 @@ project_root = os.path.dirname(cwd)
 # version is used.
 sys.path.insert(0, project_root)
 
-#import RESSPyLab
+autodoc_mock_imports = ['numpy','pandas','numdifftools']
+
+import RESSPyLab
 
 # -- General configuration ---------------------------------------------
 
@@ -275,4 +277,4 @@ texinfo_documents = [
 #texinfo_no_detailmenu = False
 
 
-autodoc_mock_imports = ['numpy','pandas','numdifftools']
+
