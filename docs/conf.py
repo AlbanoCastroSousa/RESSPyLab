@@ -36,7 +36,7 @@ sys.path.insert(0, project_root)
 
 import mock
 
-MOCK_MODULES = ['numpy', 'pandas', 'numdifftools']
+MOCK_MODULES = ['numpy', 'pandas', 'numdifftools','numdifftools.nd_algopy','nd_algopy']
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = mock.Mock()
 
