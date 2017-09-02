@@ -22,6 +22,8 @@ Welcome to the Resilient Steel Structures Laboratory (RESSLab) Python Library.
 
 The RESSLab_ is a research laboratory at École Polytechnique Fédérale de Lausanne (EPFL).
 
+The library is currently under testing phase.
+
 .. _RESSLab: https://resslab.epfl.ch
 
 * Free software: MIT license
