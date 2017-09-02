@@ -29,7 +29,7 @@ test_requirements = [
 
 setup(
     name='RESSPyLab',
-    version='0.1.0',
+    version='0.1.1',
     description="Resilient Steel Structures Laboratory (RESSLab) Python Library",
     long_description=readme + '\n\n' + history,
     author="Albano de Castro e Sousa",
