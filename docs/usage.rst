@@ -6,6 +6,7 @@ To use RESSPyLab in a project::
 
     import RESSPyLab
 
+
 The current version includes primarily functions to perform material parameter calibration of the Voce and Chaboche metal plasticity model.
 
 There are three main useful functions in the library
@@ -17,13 +18,10 @@ There are three main useful functions in the library
 		# gradF - gradient of f, array size n
 		# Hf - Hessian of f, array sized n by n
 		# x_min - local minimum of f
-		#... 
 		return x_min
 
 	def VCopt(x_0,listTests):  
-		#...
 		return x_min
 
-	def VCcurve(x,test):
-	    #...  
+	def VCcurve(x,test): 
 		return simCurve
