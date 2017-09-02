@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: RESSPyLab
-Version: 0.1.1
+Version: 0.1.2
 Summary: Resilient Steel Structures Laboratory (RESSLab) Python Library
 Home-page: https://github.com/AlbanoCastroSousa/RESSPyLab
 Author: Albano de Castro e Sousa
@@ -29,6 +29,8 @@ Description: =========
         Welcome to the Resilient Steel Structures Laboratory (RESSLab) Python Library. 
         
         The RESSLab_ is a research laboratory at École Polytechnique Fédérale de Lausanne (EPFL).
+        
+        The library is currently under testing phase.
         
         .. _RESSLab: https://resslab.epfl.ch
         
