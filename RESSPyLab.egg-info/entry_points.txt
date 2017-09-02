@@ -1,0 +1,3 @@
+[console_scripts]
+RESSPyLab = RESSPyLab.cli:main
+
