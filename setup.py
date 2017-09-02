@@ -13,6 +13,10 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'Click>=6.0',
+    'numpy',
+    'pandas',
+    'codecs',
+    'numdifftools',
     # TODO: put package requirements here
 ]
 
@@ -27,7 +31,7 @@ test_requirements = [
 setup(
     name='RESSPyLab',
     version='0.1.0',
-    description="Resilient Steel Structures Laboratory Python Library[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[ibrary",
+    description="Resilient Steel Structures Laboratory (RESSLab) Python Library",
     long_description=readme + '\n\n' + history,
     author="Albano de Castro e Sousa",
     author_email='albano.sousa@epfl.ch',

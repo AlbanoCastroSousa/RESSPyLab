@@ -18,8 +18,10 @@ RESSPyLab
      :alt: Updates
 
 
-Resilient Steel Structures Laboratory Python Library[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[D[ibrary
+ Welcome to the Resilient Steel Structures Laboratory (RESSLab) Python Library. 
 
+ The RESSLab_ is a research laboratory at École Polytechnique Fédérale de Lausanne (EPFL).
+.. _RESSLab: https://resslab.epfl.ch
 
 * Free software: MIT license
 * Documentation: https://RESSPyLab.readthedocs.io.
@@ -28,7 +30,12 @@ Resilient Steel Structures Laboratory Python Library[D[D[D[D[D[D[D[D[D
 Features
 --------
 
-* TODO
+
+
+* Implicit integration scheme for non-linear uniaxial Voce and Chaboche metal plasticity
+* Newton Trust-Region (NTR) with Singular Value Decomposition (SVD) preconditioning solver
+* Voce and Chaboche material parameter estimation with NTR-SVD
+
 
 Credits
 ---------
