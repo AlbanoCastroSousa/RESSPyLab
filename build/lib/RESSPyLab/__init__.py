@@ -4,7 +4,7 @@
 
 __author__ = """Albano de Castro e Sousa"""
 __email__ = 'albano.sousa@epfl.ch'
-__version__ = '0.1.3'
+__version__ = '0.1.5'
 
 
 
@@ -12,5 +12,7 @@ from .RESSPyLab import errorTest_scl
 from .RESSPyLab import errorEnsemble_nda
 from .RESSPyLab import steihaug
 from .RESSPyLab import NTR_SVD_Solver
-from .RESSPyLab import VCopt
+from .RESSPyLab import VCopt_SVD
+from .RESSPyLab import NTR_J_Solver
+from .RESSPyLab import VCopt_J
 from .RESSPyLab import VCsimCurve
