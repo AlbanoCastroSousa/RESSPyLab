@@ -6,3 +6,8 @@ History
 ------------------
 
 * First release on PyPI.
+
+0.1.4 (2017-10-24)
+------------------
+
+* Added Jacobi Preconditioning / Fixed Steihaug-Toint bug

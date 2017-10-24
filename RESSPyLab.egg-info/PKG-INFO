@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: RESSPyLab
-Version: 0.1.3
+Version: 0.1.4
 Summary: Resilient Steel Structures Laboratory (RESSLab) Python Library
 Home-page: https://github.com/AlbanoCastroSousa/RESSPyLab
 Author: Albano de Castro e Sousa
@@ -44,8 +44,8 @@ Description: =========
         
         
         * Implicit integration scheme for non-linear uniaxial Voce and Chaboche metal plasticity
-        * Newton Trust-Region (NTR) with Singular Value Decomposition (SVD) preconditioning solver
-        * Voce and Chaboche material parameter estimation with NTR-SVD
+        * Newton Trust-Region (NTR) with Singular Value Decomposition (SVD) and Jacobi(J) preconditioning solver
+        * Voce and Chaboche material parameter estimation with NTR-SVD and NTR-J
         
         
         Credits
@@ -66,6 +66,11 @@ Description: =========
         ------------------
         
         * First release on PyPI.
+        
+        0.1.4 (2017-10-24)
+        ------------------
+        
+        * Added Jacobi Preconditioning / Fixed Steihaug-Toint bug
         
 Keywords: RESSPyLab
 Platform: UNKNOWN

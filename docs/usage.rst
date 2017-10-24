@@ -9,11 +9,22 @@ To use RESSPyLab in a project::
 
 The current version includes primarily functions to perform material parameter calibration of the Voce and Chaboche (VC) metal plasticity model.
 
-There are three main useful functions in the library
+There are five main useful functions in the library
 
 .. code:: python
 
 	def NTR_SVD_Solver(f,gradF,Hf,x_0): 
+		# Newton-Trust Region solver with SVD preconditioning
+		# f - function taking an array "x" of n floats as an argument and returning the real value of f
+		# gradF - function taking an array "x" of n floats as an argument and returning the gradient of f, an array sized n
+		# Hf - function taking an array "x" of n floats as an argument and returning Hessian of f, array sized n by n
+		# x_0 - initial starting point; array sized n
+		# x_min - local minimum of f; array sized n
+		#...
+		return x_min
+
+	def NTR_J_Solver(f,gradF,Hf,x_0):
+		# Newton-Trust Region solver with Jacobi preconditioning 
 		# f - function taking an array "x" of n floats as an argument and returning the real value of f
 		# gradF - function taking an array "x" of n floats as an argument and returning the gradient of f, an array sized n
 		# Hf - function taking an array "x" of n floats as an argument and returning Hessian of f, array sized n by n
@@ -32,8 +43,14 @@ There are three main useful functions in the library
 		#...
 		return simCurve
 
-	def VCopt(x_0,listTests):
-		# This function performs parameter optimization of the VC model for an ensemble of experimental data. 
+	def VCopt_SVD(x_0,listTests):
+		# This function performs parameter optimization of the VC model for an ensemble of experimental data with SVD preconditioning. 
+		# 
+		# listTests is a python list containg pandas dataframes of multiple "test"  
+		return x_min
+
+	def VCopt_J(x_0,listTests):
+		# This function performs parameter optimization of the VC model for an ensemble of experimental data with Jacobi preconditioning. 
 		# 
 		# listTests is a python list containg pandas dataframes of multiple "test"  
 		return x_min

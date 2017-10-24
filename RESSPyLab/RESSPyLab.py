@@ -300,9 +300,9 @@ def errorEnsemble_nda(x_sol):
     
     #barrier for function for zero constraints
     
-    for barrier in range(len(x_sol)-2):
+    for barrier in range(len(x_sol)):
         
-        Phi_ensemble=Phi_ensemble+1/x_sol[-(barrier+1)]**2
+        Phi_ensemble=Phi_ensemble+1/x_sol[barrier]**2
         
     return Phi_ensemble
 
@@ -356,9 +356,12 @@ def steihaug(Q,b,Delta):
          
 
         
-        beta=np.dot(np.dot(Q,x_1)+b,np.dot(Q,x_1)+b)/np.dot(np.dot(Q,x_1)+b,np.dot(Q,x_1)+b)
+        beta=np.dot(np.dot(Q,x_1)+b,np.dot(Q,x_1)+b)/np.dot(np.dot(Q,x_prev)+b,np.dot(Q,x_prev)+b)
         
         d=-np.dot(Q,x_1)-b+beta*d
+        
+        if np.sqrt(np.dot(np.dot(Q,x_1)+b,np.dot(Q,x_1)+b))<1e-10:
+            break
             
     if flag==0:
         x_stei=x_1
@@ -436,9 +439,9 @@ def NTR_SVD_Solver(f,df,Hf,x):
         
         barrier_scale=1.0
             
-        if np.min(x_trial)<0:
+        if np.min(x_trial)<Tol:
             ind=np.argmin(x_trial)
-            barrier_scale=(1e-2-x[ind])/dk[ind]
+            barrier_scale=(Tol-x[ind])/dk[ind]
 
         dk=barrier_scale*dk
         
@@ -492,7 +495,111 @@ def NTR_SVD_Solver(f,df,Hf,x):
     return x
 
 
-def VCopt(x_0,listCleanTests):
+def NTR_J_Solver(f,df,Hf,x):
+
+    ##### Newton's method with trust region with Steihaug-Toint truncated conjugated gradient method with Jacobi preconditioning ######
+
+    # Initialization
+
+    dk=np.zeros(len(x))
+
+    Delta=10
+    Tol=1e-10
+
+    eta1=0.01
+    eta2=0.9
+
+    nitNMTRmax=int(1e6)
+
+    gradPhi_fun=df
+    HessPhi_fun=Hf
+
+    gradPhi_test=gradPhi_fun(x)
+    HessPhi_test=HessPhi_fun(x)
+    reboot=0
+
+
+    for nit in range(nitNMTRmax):
+
+        Phi_test_k=f(x)*1.0
+
+        # Solve trust-region sub-problem with steihaug-toint method and a scaled hessian
+
+        Diag=np.power(np.abs(np.diag(HessPhi_test)),0.5)
+        Diag[np.abs(Diag)<1e-10*np.max(Diag)]=1
+        S=np.diag(1/Diag)
+
+        #S=np.diag(1/np.power(np.abs(np.diag(HessPhi_test)),0.5))
+
+        HessPhi_test_S=np.dot(np.dot(S.transpose(),HessPhi_test),S)
+
+        gradPhi_test_S=np.dot(S.transpose(),gradPhi_test)
+
+        dk=steihaug(HessPhi_test_S,gradPhi_test_S,Delta)
+
+        # Bring back the scaled step
+
+        dk=np.dot(S,dk)
+
+        # Prevent the step from over-shooting the barrier
+
+        x_trial=x+dk
+
+        barrier_scale=1.0
+
+        if np.min(x_trial)<Tol:
+            ind=np.argmin(x_trial)
+            barrier_scale=(Tol-x[ind])/dk[ind]
+
+        dk=barrier_scale*dk
+
+        model_k=Phi_test_k*1.0
+
+        model_k1=Phi_test_k+np.dot(dk,gradPhi_test)+np.dot(dk,np.dot(HessPhi_test,dk))
+
+        Phi_test_k1=f(x+dk)*1.0
+
+        rho=(Phi_test_k-Phi_test_k1)/(model_k-model_k1)
+
+        if ((model_k-model_k1)<1e-14 and (Phi_test_k-Phi_test_k1)>0) or np.abs((Phi_test_k-Phi_test_k1)/Phi_test_k)<1e-14:
+            x=x+dk
+
+            gradPhi_test=gradPhi_fun(x)
+            HessPhi_test=HessPhi_fun(x)
+
+
+            if rho>=0.9:
+                Delta=2.*Delta
+
+
+        elif rho<eta1 or (Phi_test_k-Phi_test_k1)<0:
+            S_inv=np.diag(np.power(np.abs(np.diag(HessPhi_test)),0.5))
+            Delta=0.5*np.sqrt(np.dot(np.dot(S_inv,dk),np.dot(S_inv,dk)))
+
+        else:
+            x=x+dk
+
+            gradPhi_test=gradPhi_fun(x)
+            HessPhi_test=HessPhi_fun(x)
+
+
+            if rho>=0.9:
+                Delta=2.*Delta
+
+        norm_grad=np.sqrt(np.dot(gradPhi_test,gradPhi_test))
+
+        
+        print ('It. '+str(nit)+' ; Function: '+str(Phi_test_k)+' ; norm_grad: '+str(norm_grad))
+
+        if norm_grad < Tol:
+            break
+    
+
+
+    return x
+
+
+def VCopt_SVD(x_0,listCleanTests):
 
     global arrayCleanTests
 
@@ -503,5 +610,20 @@ def VCopt(x_0,listCleanTests):
     Hess_error_fun=nda.Hessian(errorEnsemble_nda)
 
     x_sol=NTR_SVD_Solver(errorEnsemble_nda,grad_error_fun,Hess_error_fun,x_0)
+
+    return x_sol
+
+
+def VCopt_J(x_0,listCleanTests):
+
+    global arrayCleanTests
+
+    arrayCleanTests=list(listCleanTests)
+
+    grad_error_fun=nda.Gradient(errorEnsemble_nda)
+
+    Hess_error_fun=nda.Hessian(errorEnsemble_nda)
+
+    x_sol=NTR_J_Solver(errorEnsemble_nda,grad_error_fun,Hess_error_fun,x_0)
 
     return x_sol
