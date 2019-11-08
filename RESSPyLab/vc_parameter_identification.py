@@ -3,10 +3,10 @@ Top level function for calibration of the original Voce-Chaboche model.
 """
 import numpy as np
 from numdifftools import nd_algopy as nda
-from auglag_factory import auglag_factory, constrained_auglag_opt
-from data_readers import load_and_filter_data_set, load_data_set
-from uvc_model import test_total_area
-from RESSPyLab import errorTest_scl
+from .auglag_factory import auglag_factory, constrained_auglag_opt
+from .data_readers import load_and_filter_data_set, load_data_set
+from .uvc_model import test_total_area
+from .RESSPyLab import errorTest_scl
 
 
 def vc_param_opt(x_0, file_list, x_log_file, fxn_log_file, filter_data=True):
