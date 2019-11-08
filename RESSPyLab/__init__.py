@@ -32,6 +32,9 @@ from .uvc_model import sim_curve_uvc, calc_phi_total, uvc_consistency_metric
 from .sqp_factory import sqp_factory
 from .uvc_parameter_identification import uvc_param_opt, uvc_param_opt_ls
 
+# For running several optimizations sequentially
+from .multi_runner import opt_multi_run
+
 # For output
 from .summary_tables_maker import summary_tables_maker_uvc, summary_tables_maker_vc
 from .solution_vis import solution_visualizations
