@@ -16,7 +16,7 @@ from .data_readers import load_and_filter_data_set, load_data_set
 def vc_tensile_opt_scipy(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup,
                          rho_gamma_b_inf, rho_gamma_b_sup, rho_gamma_12_inf, rho_gamma_12_sup,
                          x_log_file='', fun_log_file='', filter_data=True,
-                         max_its=300, tol=1.e-8, make_x0_feasible=True):
+                         max_its=600, tol=1.e-8, make_x0_feasible=True):
     """ Return parameters based on a single tensile test for the original VC model using the trust-constr method.
 
     :param np.array x_0: Initial primal variables.
@@ -56,7 +56,7 @@ def vc_tensile_opt_scipy(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf
     min_x_bound = 0.01
     x_lb = [min_x_bound for i in range(len(x_0))]
     x_ub = [np.inf for i in range(len(x_0))]
-    bounds = opt.Bounds(x_lb, x_ub, keep_feasible=False)
+    bounds = opt.Bounds(x_lb, x_ub, keep_feasible=True)
     # Bounds on inequality constraints
     constr_lb = -np.inf
     constr_ub = 0.
@@ -112,10 +112,10 @@ def vc_tensile_opt_scipy(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf
     return [scipy_sol, dumper]
 
 
-def vco_limited_info_opt_auglag(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup,
-                                rho_gamma_b_inf, rho_gamma_b_sup, rho_gamma_12_inf, rho_gamma_12_sup,
-                                x_log_file='', fun_log_file='', filter_data=True,
-                                max_its=200, tol=1.e-8, make_x0_feasible=True):
+def vc_tensile_opt_auglag(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup,
+                          rho_gamma_b_inf, rho_gamma_b_sup, rho_gamma_12_inf, rho_gamma_12_sup,
+                          x_log_file='', fun_log_file='', filter_data=True,
+                          max_its=300, tol=1.e-8, make_x0_feasible=True):
     """ Return parameters based on a single tensile test for the original VC model using the aug. Lagrangian method.
 
     :param np.array x_0: Initial primal variables.
@@ -181,9 +181,13 @@ def vco_limited_info_opt_auglag(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yi
         x_0 = make_feasible(x_0, g_constants)
     # Create the solver and run
     solver = auglag_factory(filtered_data, x_log_file, fun_log_file, 'original', 'steihaug', 'reciprocal', False)
-    solver.set_maximum_iterations(max_its, max_its, max_its)
+    # max_its for each Lagrangian step, maximum of 20 Lagrangian steps, and allow 2 full steps (of max_its)
+    solver.set_maximum_iterations(max_its, 20, 2 * max_its)
     solver.set_auglag_tol(tol)
     x_opt = constrained_auglag_opt(x_0, constraint_dict, solver)
+    # Check if the constraints were satisfied
+    vc_constraint_check(x_opt, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup, rho_gamma_b_inf,
+                        rho_gamma_b_sup)
     return [DummyResults(x_opt), None]
 
 

@@ -6,7 +6,7 @@ import os
 import errno
 from .vc_parameter_identification import vc_param_opt
 from .uvc_parameter_identification import uvc_param_opt
-from .vc_limited_info_opt import vc_tensile_opt_scipy
+from .vc_limited_info_opt import vc_tensile_opt_scipy, vc_tensile_opt_auglag
 
 
 def dir_maker(directory):
@@ -52,7 +52,8 @@ def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model
     return
 
 
-def tensile_opt_multi_run(data_files, output_dirs, data_names, should_filter, x_0s, model_type, constr_bounds):
+def tensile_opt_multi_run(data_files, output_dirs, data_names, should_filter, x_0s, model_type, constr_bounds,
+                          feasible_start=True, algorithm='NITRO'):
     """ Runs the tensile test only optimization using the VC model multiple times sequentially.
 
     :param list data_files: [str] Paths to the files that contain the tensile stress-strain data.
@@ -62,6 +63,8 @@ def tensile_opt_multi_run(data_files, output_dirs, data_names, should_filter, x_
     :param list x_0s: [np.ndarray] Starting point for each data sets.
     :param str model_type: 'VC' to use the Voce-Chaboche, 'UVC' to use the Updated Voce-Chaboche model.
     :param dict constr_bounds: Specifies the bounds on the constraints. See Notes for the keys/values.
+    :param bool feasible_start: If True then modifies the starting point to be feasible, if False no modification.
+    :param str algorithm: 'NITRO' for the NITRO algorithm (default), or 'AugLag' for the augmented Lagrangian.
     :return None: None
 
     Notes:
@@ -86,12 +89,17 @@ def tensile_opt_multi_run(data_files, output_dirs, data_names, should_filter, x_
         filt = should_filter[i]
         x_start = x_0s[i].copy()
         cb = constr_bounds
+        if algorithm == 'NITRO':
+            opt_fun = vc_tensile_opt_scipy
+        else:
+            opt_fun = vc_tensile_opt_auglag
         if model_type == 'VC':
-            vc_tensile_opt_scipy(x_start, file_list,
-                                 cb['rho_iso_inf'], cb['rho_iso_sup'], cb['rho_yield_inf'], cb['rho_yield_sup'],
-                                 cb['rho_gamma_b_inf'], cb['rho_gamma_b_sup'],
-                                 cb['rho_gamma_12_inf'], cb['rho_gamma_12_sup'],
-                                 x_log_file, fun_log_file, filter_data=filt)
+            opt_fun(x_start, file_list,
+                    cb['rho_iso_inf'], cb['rho_iso_sup'], cb['rho_yield_inf'], cb['rho_yield_sup'],
+                    cb['rho_gamma_b_inf'], cb['rho_gamma_b_sup'],
+                    cb['rho_gamma_12_inf'], cb['rho_gamma_12_sup'],
+                    x_log_file, fun_log_file, filter_data=filt,
+                    make_x0_feasible=feasible_start)
         else:
             raise ValueError('model_type should be VC')
     return
