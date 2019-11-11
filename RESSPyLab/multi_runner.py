@@ -6,7 +6,7 @@ import os
 import errno
 from .vc_parameter_identification import vc_param_opt
 from .uvc_parameter_identification import uvc_param_opt
-from .vc_limited_info_opt import vc_tensile_opt_scipy, vc_tensile_opt_auglag
+from .vc_limited_info_opt import vc_tensile_opt_scipy, vc_tensile_opt_auglag, vc_tensile_opt_linesearch
 
 
 def dir_maker(directory):
@@ -64,7 +64,7 @@ def tensile_opt_multi_run(data_files, output_dirs, data_names, should_filter, x_
     :param str model_type: 'VC' to use the Voce-Chaboche, 'UVC' to use the Updated Voce-Chaboche model.
     :param dict constr_bounds: Specifies the bounds on the constraints. See Notes for the keys/values.
     :param bool feasible_start: If True then modifies the starting point to be feasible, if False no modification.
-    :param str algorithm: 'NITRO' for the NITRO algorithm (default), or 'AugLag' for the augmented Lagrangian.
+    :param str algorithm: Specifies the optimization algorithm, see Notes for options.
     :return None: None
 
     Notes:
@@ -78,6 +78,10 @@ def tensile_opt_multi_run(data_files, output_dirs, data_names, should_filter, x_
             'rho_gamma_b_sup': Upper bound on ratio the rate of kinematic to isotropic hardening.
             'rho_gamma_12_inf': Lower bound on ratio of gamma_1 to gamma_2.
             'rho_gamma_12_sup': Upper bound on ratio of gamma_1 to gamma_2.
+        - algorithm options:
+            'NITRO': NITRO algorithm
+            'AugLag': augmented Lagrangian algorithm
+            'LineSearch': SQP line-search algorithm
     """
     for i, d_path in enumerate(data_files):
         o_dir = output_dirs[i]
@@ -91,8 +95,12 @@ def tensile_opt_multi_run(data_files, output_dirs, data_names, should_filter, x_
         cb = constr_bounds
         if algorithm == 'NITRO':
             opt_fun = vc_tensile_opt_scipy
-        else:
+        elif algorithm == 'AugLag':
             opt_fun = vc_tensile_opt_auglag
+        elif algorithm == 'LineSearch':
+            opt_fun = vc_tensile_opt_linesearch
+        else:
+            raise ValueError('Incorrect choice of algorithm parameter.')
         if model_type == 'VC':
             opt_fun(x_start, file_list,
                     cb['rho_iso_inf'], cb['rho_iso_sup'], cb['rho_yield_inf'], cb['rho_yield_sup'],

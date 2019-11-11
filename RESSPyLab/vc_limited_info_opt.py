@@ -11,6 +11,7 @@ from .vc_li_opt_constraints import *
 from .auglag_factory import auglag_factory, constrained_auglag_opt
 from .scipy_constr_opt_factory import GWrapper
 from .data_readers import load_and_filter_data_set, load_data_set
+from .sqp_factory import sqp_factory
 
 
 def vc_tensile_opt_scipy(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup,
@@ -115,7 +116,7 @@ def vc_tensile_opt_scipy(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf
 def vc_tensile_opt_auglag(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup,
                           rho_gamma_b_inf, rho_gamma_b_sup, rho_gamma_12_inf, rho_gamma_12_sup,
                           x_log_file='', fun_log_file='', filter_data=True,
-                          max_its=300, tol=1.e-8, make_x0_feasible=True):
+                          max_its=600, tol=1.e-8, make_x0_feasible=True):
     """ Return parameters based on a single tensile test for the original VC model using the aug. Lagrangian method.
 
     :param np.array x_0: Initial primal variables.
@@ -181,10 +182,95 @@ def vc_tensile_opt_auglag(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_in
         x_0 = make_feasible(x_0, g_constants)
     # Create the solver and run
     solver = auglag_factory(filtered_data, x_log_file, fun_log_file, 'original', 'steihaug', 'reciprocal', False)
-    # max_its for each Lagrangian step, maximum of 20 Lagrangian steps, and allow 2 full steps (of max_its)
-    solver.set_maximum_iterations(max_its, 20, 2 * max_its)
+    # max_its for each Lagrangian step, maximum of 20 Lagrangian steps, and allow 10 full steps (of max_its)
+    solver.set_maximum_iterations(max_its, 20, max_its)
     solver.set_auglag_tol(tol)
     x_opt = constrained_auglag_opt(x_0, constraint_dict, solver)
+    # Check if the constraints were satisfied
+    vc_constraint_check(x_opt, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup, rho_gamma_b_inf,
+                        rho_gamma_b_sup)
+    return [DummyResults(x_opt), None]
+
+
+def vc_tensile_opt_linesearch(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup,
+                              rho_gamma_b_inf, rho_gamma_b_sup, rho_gamma_12_inf, rho_gamma_12_sup,
+                              x_log_file='', fun_log_file='', filter_data=True,
+                              max_its=600, tol=1.e-8, make_x0_feasible=True):
+    """ Return parameters based on a single tensile test for the original VC model using the line search algorithm.
+
+    :param np.array x_0: Initial primal variables.
+    :param list file_list: [str] Path to the tensile test to use in the optimization.
+    :param float rho_iso_inf: Lower bound on ratio of isotropic to total hardening at saturation.
+    :param float rho_iso_sup: Upper bound on ratio of isotropic to total hardening at saturation.
+    :param float rho_yield_inf: Lower bound on ratio of initial yield stress to total stress at saturation.
+    :param float rho_yield_sup: Upper bound on ratio of initial yield stress to total stress at saturation.
+    :param float rho_gamma_b_inf: Lower bound on ratio the rate of kinematic to isotropic hardening.
+    :param float rho_gamma_b_sup: Upper bound on ratio the rate of kinematic to isotropic hardening.
+    :param float rho_gamma_12_inf: Lower bound on ratio of gamma_1 to gamma_2.
+    :param float rho_gamma_12_sup: Upper bound on ratio of gamma_1 to gamma_2.
+    :param str x_log_file: Path to file to write the primal variable history.
+    :param str fun_log_file: Path to file to write the objective function history.
+    :param bool filter_data: If True, then filter data, else do not filter the data.
+    :param int max_its: Maximum iterations allowed in analysis.
+    :param float tol: Exit tolerance on the norm of grad[L].
+    :param bool make_x0_feasible: If true then makes the first point feasible.
+    :return list:
+        - (np.array): Final primal variables.
+        - None
+
+    Notes:
+        - The use of vco_limited_info_opt_scipy() is recommended.
+    """
+    # Load the data
+    if filter_data:
+        filtered_data = load_and_filter_data_set(file_list)
+    else:
+        filtered_data = load_data_set(file_list)
+
+    # The constants for the constraint functions
+    g_constants = {'rho_yield_inf': rho_yield_inf, 'rho_yield_sup': rho_yield_sup,
+                   'rho_iso_inf': rho_iso_inf, 'rho_iso_sup': rho_iso_sup,
+                   'rho_gamma_inf': rho_gamma_b_inf, 'rho_gamma_sup': rho_gamma_b_sup,
+                   'rho_gamma_12_inf': rho_gamma_12_inf, 'rho_gamma_12_sup': rho_gamma_12_sup}
+    # Set-up constraints
+    n_backstresses = int((len(x_0) - 4) // 2)
+    if n_backstresses == 2:
+        constraint_dict = {'constants': g_constants, 'variables': {},
+                           'functions': [g3_vco_lower, g3_vco_upper, g4_vco_lower, g4_vco_upper,
+                                         g5_vco_lower, g5_vco_upper, g6_vco_lower, g6_vco_upper],
+                           'gradients': [g3_vco_lower_gradient, g3_vco_upper_gradient, g4_vco_lower_gradient,
+                                         g4_vco_upper_gradient, g5_vco_lower_gradient, g5_vco_upper_gradient,
+                                         g6_vco_lower_gradient, g6_vco_upper_gradient],
+                           'hessians': [g3_vco_lower_hessian, g3_vco_upper_hessian, g4_vco_lower_hessian,
+                                        g4_vco_upper_hessian, g5_vco_lower_hessian, g5_vco_upper_hessian,
+                                        g6_vco_lower_hessian, g6_vco_upper_hessian],
+                           'updater': None}
+    elif n_backstresses == 1:
+        constraint_dict = {'constants': g_constants, 'variables': {},
+                           'functions': [g3_vco_lower, g3_vco_upper, g4_vco_lower, g4_vco_upper,
+                                         g5_vco_lower, g5_vco_upper],
+                           'gradients': [g3_vco_lower_gradient, g3_vco_upper_gradient, g4_vco_lower_gradient,
+                                         g4_vco_upper_gradient, g5_vco_lower_gradient, g5_vco_upper_gradient],
+                           'hessians': [g3_vco_lower_hessian, g3_vco_upper_hessian, g4_vco_lower_hessian,
+                                        g4_vco_upper_hessian, g5_vco_lower_hessian, g5_vco_upper_hessian],
+                           'updater': None}
+    else:
+        raise ValueError('Only 1 or 2 backstresses are supported in the tensile calibration at the moment.')
+    # Make the point feasible
+    if make_x0_feasible:
+        x_0 = make_feasible(x_0, g_constants)
+    vc_constraint_check(x_0, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup, rho_gamma_b_inf,
+                        rho_gamma_b_sup)
+    print(x_0)
+    # Create the solver and run
+    solver = sqp_factory('line-search', 'original', 'reciprocal', filtered_data, constraint_dict,
+                         x_log_file, fun_log_file)
+    # max_its for each Lagrangian step, maximum of 20 Lagrangian steps, and allow 2 full steps (of max_its)
+    solver.set_maximum_iterations(max_its)
+    solver.set_tolerance(tol)
+    lambda_0 = np.zeros(np.shape(solver.constraint.get_g(x_0)))
+    x = x_0.copy().reshape(-1, 1)
+    [x_opt, lambda_opt, conv_criteria] = solver.solve_return_conv(x, lambda_0)
     # Check if the constraints were satisfied
     vc_constraint_check(x_opt, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup, rho_gamma_b_inf,
                         rho_gamma_b_sup)
