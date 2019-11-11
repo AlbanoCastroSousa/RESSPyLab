@@ -54,7 +54,7 @@ def g4_vco_upper(x, constants, variables):
     :param dict variables: Defines constraint values that depend on x.
     :return float: Value of the constraint in standard form.
     """
-    iso_kin_ratio_max = constants['rho_iso_inf']
+    iso_kin_ratio_max = constants['rho_iso_sup']
     q_inf = x[2]
     n_backstresses = int((len(x) - 4) / 2)
     sum_ck_gammak = 0.
@@ -74,7 +74,7 @@ def g4_vco_lower(x, constants, variables):
     :param dict variables: Defines constraint values that depend on x.
     :return float: Value of the constraint in standard form.
     """
-    iso_kin_ratio_min = constants['rho_iso_sup']
+    iso_kin_ratio_min = constants['rho_iso_inf']
     q_inf = x[2]
     n_backstresses = int((len(x) - 4) / 2)
     sum_ck_gammak = 0.
