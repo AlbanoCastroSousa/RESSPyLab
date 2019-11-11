@@ -277,8 +277,6 @@ class AugLagGenSolver:
                 print " WARNING: SECONDARY CONVERGENCE CRITERIA TRIGGERED. NORM OF GRADIENT NOT WITHIN TOLERANCE, " \
                       "THUS ONLY AN APPROXIMATE SOLUTION IS OBTAINED"
                 break
-            elif self.total_iterations > self.maximum_total_iterations:
-                break
 
         return [x, delta, nit]
 
