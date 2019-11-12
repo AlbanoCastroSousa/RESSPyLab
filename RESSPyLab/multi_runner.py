@@ -35,6 +35,7 @@ def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model
         - This function creates each output directory if they do not already exist.
     """
     for i, d_dir in enumerate(data_dirs):
+        print('Running:\n\t{0}'.format(d_dir))
         o_dir = output_dirs[i]
         dir_maker(o_dir)
         name = data_names[i]
@@ -46,7 +47,14 @@ def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model
         if model_type == 'VC':
             vc_param_opt(x_start, file_list, x_log_file, fun_log_file, filt)
         elif model_type == 'UVC':
-            uvc_param_opt(x_start, file_list, x_log_file, fun_log_file, filter_data=filt)
+            # Catch RuntimeErrors (return mapping doesn't converge) because UVC model can have convergence issues if the
+            # parameters are out of bounds
+            try:
+                uvc_param_opt(x_start, file_list, x_log_file, fun_log_file, filter_data=filt)
+            except RuntimeError as e:
+                print(e)
+                print('Encountered error in analysis of\n\t{0}\nMoving to next data set.'.format(d_dir))
+
         else:
             raise ValueError('model_type should be either VC or UVC')
     return
