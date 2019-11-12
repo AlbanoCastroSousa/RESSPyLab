@@ -22,20 +22,15 @@ def uvc_data_plotter(x, test_data, output_dir, file_name, plot_label):
     for i, test in enumerate(test_data):
         sim_curve_upd = sim_curve_uvc(x, test)
         h = plt.figure()
-        plt.plot(test['e_true'], test['Sigma_true'], c='k', label='Test', lw=0.85)
+        plt.plot(test['e_true'], test['Sigma_true'], c='k', label='Test', lw=0.75)
         plt.plot(sim_curve_upd['e_true'], sim_curve_upd['Sigma_true'], c='r', label=plot_label, lw=0.55)
-        ax = plt.gca()
-        ymin, ymax = ax.get_ylim()
-        ax.set_ylim(ymin * 1.25, ymax)
-        plt.legend(loc='lower right', ncol=2, frameon=False, columnspacing=0.5, mode=None, borderpad=0.,
-                   borderaxespad=0.2, handlelength=1.25, handletextpad=0.3)
-        plt.xlabel(r'True Strain, $\varepsilon$')
-        plt.ylabel(r'True Stress, $\sigma$ [MPa]')
-        plt.tight_layout()
+
+        _finish_plots(x)
         if output_dir == '':
             plt.show()
         else:
             plt.savefig(output_dir + file_name + '_' + str(i) + '.pdf')
+            plt.close()
 
         handles.append(h)
     return handles
@@ -65,19 +60,25 @@ def uvc_data_multi_plotter(x, test_data, output_dir, file_name, plot_labels, col
             sim_curve_upd = sim_curve_uvc(xj, test)
             plt.plot(sim_curve_upd['e_true'], sim_curve_upd['Sigma_true'], c=colors[j], label=plot_labels[j], lw=0.55,
                      ls=styles[j])
-        # Finish the plots
-        ax = plt.gca()
-        ymin, ymax = ax.get_ylim()
-        ax.set_ylim(ymin * 1.25, ymax)
-        plt.legend(loc='lower right', ncol=len(x) + 1, frameon=False, columnspacing=0.5, mode=None, borderpad=0.,
-                   borderaxespad=0.2, handlelength=1.25, handletextpad=0.3)
-        plt.xlabel(r'True Strain, $\varepsilon$')
-        plt.ylabel(r'True Stress, $\sigma$ [MPa]')
-        plt.tight_layout()
+
+        _finish_plots(x)
         if output_dir == '':
             plt.show()
         else:
             plt.savefig(output_dir + file_name + '_' + str(i) + '.pdf')
+            plt.close()
 
         handles.append(h)
     return handles
+
+
+def _finish_plots(x):
+    ax = plt.gca()
+    ymin, ymax = ax.get_ylim()
+    ax.set_ylim(ymin * 1.25, ymax)
+    plt.legend(loc='lower right', ncol=len(x) + 1, frameon=False, columnspacing=0.5, mode=None, borderpad=0.,
+               borderaxespad=0.2, handlelength=1.25, handletextpad=0.3)
+    plt.xlabel(r'True Strain, $\varepsilon$')
+    plt.ylabel(r'True Stress, $\sigma$ [MPa]')
+    plt.tight_layout()
+    return
