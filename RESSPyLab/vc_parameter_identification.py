@@ -64,5 +64,5 @@ def vc_consistency_metric(x_base, x_sample, data):
     x_diff = x_sample - x_base
     hess_base = vc_get_hessian(x_base, data)
     numerator = np.dot(x_diff, hess_base.dot(x_diff))
-    denominator = test_total_area(x_base, data)
+    denominator = test_total_area(np.insert(x_base, 4, [0., 1.]), data)
     return np.sqrt(numerator / denominator)
