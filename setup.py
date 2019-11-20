@@ -14,9 +14,11 @@ with open('HISTORY.rst') as history_file:
 requirements = [
     'Click>=6.0',
     'numpy>=1.10.2',
-    'numpy<=1.10.5',
-    'pandas==0.15.2',
+    'pandas',
     'numdifftools',
+    'matplotlib',
+    'quadprog',
+    'scipy>=1.1.0'
     # TODO: put package requirements here
 ]
 
@@ -36,7 +38,7 @@ setup(
     author="Albano de Castro e Sousa",
     author_email='albano.sousa@epfl.ch',
     url='https://github.com/AlbanoCastroSousa/RESSPyLab',
-    packages=find_packages(include=['RESSPyLab']),
+    packages=['RESSPyLab'],
     entry_points={
         'console_scripts': [
             'RESSPyLab=RESSPyLab.cli:main'
