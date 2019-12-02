@@ -413,7 +413,7 @@ def NTR_SVD_Solver(f, df, Hf, x):
 
         model_k = Phi_test_k * 1.0
 
-        model_k1 = Phi_test_k + np.dot(dk, gradPhi_test) + np.dot(dk, np.dot(HessPhi_test, dk))
+        model_k1 = Phi_test_k + np.dot(dk, gradPhi_test) + 0.5*np.dot(dk, np.dot(HessPhi_test, dk))
 
         Phi_test_k1 = f(x + dk) * 1.0
 
@@ -513,7 +513,7 @@ def NTR_J_Solver(f, df, Hf, x):
 
         model_k = Phi_test_k * 1.0
 
-        model_k1 = Phi_test_k + np.dot(dk, gradPhi_test) + np.dot(dk, np.dot(HessPhi_test, dk))
+        model_k1 = Phi_test_k + np.dot(dk, gradPhi_test) + 0.5*np.dot(dk, np.dot(HessPhi_test, dk))
 
         Phi_test_k1 = f(x + dk) * 1.0
 
@@ -878,7 +878,7 @@ def NTR_J_Solver_Lag(f, df, Hf, Lag_arg, tol_k):
 
         model_k = Phi_test_k * 1.0
 
-        model_k1 = Phi_test_k + np.dot(dk, gradPhi_test) + np.dot(dk, np.dot(HessPhi_test, dk))
+        model_k1 = Phi_test_k + np.dot(dk, gradPhi_test) + 0.5*np.dot(dk, np.dot(HessPhi_test, dk))
 
         g_trial = makeG(x_trial, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup)
 
