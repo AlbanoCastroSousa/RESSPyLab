@@ -4,6 +4,7 @@ Function to run several optimizations sequentially.
 from __future__ import print_function
 import os
 import errno
+import time
 from .vc_parameter_identification import vc_param_opt
 from .uvc_parameter_identification import uvc_param_opt
 from .vc_limited_info_opt import vc_tensile_opt_scipy, vc_tensile_opt_auglag, vc_tensile_opt_linesearch
@@ -61,7 +62,7 @@ def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model
 
 
 def tensile_opt_multi_run(data_files, output_dirs, data_names, should_filter, x_0s, model_type, constr_bounds,
-                          feasible_start=True, algorithm='NITRO'):
+                          feasible_start=True, algorithm='NITRO', timing=False):
     """ Runs the tensile test only optimization using the VC model multiple times sequentially.
 
     :param list data_files: [str] Paths to the files that contain the tensile stress-strain data.
@@ -73,6 +74,7 @@ def tensile_opt_multi_run(data_files, output_dirs, data_names, should_filter, x_
     :param dict constr_bounds: Specifies the bounds on the constraints. See Notes for the keys/values.
     :param bool feasible_start: If True then modifies the starting point to be feasible, if False no modification.
     :param str algorithm: Specifies the optimization algorithm, see Notes for options.
+    :param bool timing: If True then saves a time log file for each run, else don't save a time log file.
     :return None: None
 
     Notes:
@@ -109,13 +111,22 @@ def tensile_opt_multi_run(data_files, output_dirs, data_names, should_filter, x_
             opt_fun = vc_tensile_opt_linesearch
         else:
             raise ValueError('Incorrect choice of algorithm parameter.')
+        if timing:
+            time_log_file = os.path.join(o_dir, name + '_li_time_log.txt')
         if model_type == 'VC':
+            if timing:
+                start_time = time.time()
             opt_fun(x_start, file_list,
                     cb['rho_iso_inf'], cb['rho_iso_sup'], cb['rho_yield_inf'], cb['rho_yield_sup'],
                     cb['rho_gamma_b_inf'], cb['rho_gamma_b_sup'],
                     cb['rho_gamma_12_inf'], cb['rho_gamma_12_sup'],
                     x_log_file, fun_log_file, filter_data=filt,
                     make_x0_feasible=feasible_start)
+            if timing:
+                end_time = time.time()
+                with open(time_log_file, 'w') as time_file:
+                    time_file.write('Start: {0}, End: {1}, Elapsed: {2}'.format(start_time, end_time,
+                                                                                end_time - start_time))
         else:
             raise ValueError('model_type should be VC')
     return

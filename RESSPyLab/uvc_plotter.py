@@ -25,7 +25,14 @@ def uvc_data_plotter(x, test_data, output_dir, file_name, plot_label):
         plt.plot(test['e_true'], test['Sigma_true'], c='k', label='Test', lw=0.75)
         plt.plot(sim_curve_upd['e_true'], sim_curve_upd['Sigma_true'], c='r', label=plot_label, lw=0.55)
 
-        _finish_plots(x)
+        ax = plt.gca()
+        ymin, ymax = ax.get_ylim()
+        ax.set_ylim(ymin * 1.25, ymax)
+        plt.legend(loc='lower right', ncol=len(x) + 1, frameon=False, columnspacing=0.5, mode=None, borderpad=0.,
+                   borderaxespad=0.2, handlelength=1.25, handletextpad=0.3, fontsize='x-small')
+        plt.xlabel(r'True Strain, $\varepsilon$')
+        plt.ylabel(r'True Stress, $\sigma$ [MPa]')
+        plt.tight_layout()
         if output_dir == '':
             plt.show()
         else:
@@ -61,7 +68,22 @@ def uvc_data_multi_plotter(x, test_data, output_dir, file_name, plot_labels, col
             plt.plot(sim_curve_upd['e_true'], sim_curve_upd['Sigma_true'], c=colors[j], label=plot_labels[j], lw=0.55,
                      ls=styles[j])
 
-        _finish_plots(x)
+        ax = plt.gca()
+        ymin, ymax = ax.get_ylim()
+        if len(plot_labels) < 3:
+            ncol = len(x) + 1
+            ax.set_ylim(ymin * 1.25, ymax)
+        elif len(plot_labels) == 3:
+            ncol = 2
+            ax.set_ylim(ymin * 1.5, ymax)
+        else:
+            raise ValueError('More than 4 plots not supported at the moment.')
+
+        plt.legend(loc='lower right', ncol=ncol, frameon=False, columnspacing=0.5, mode=None, borderpad=0.,
+                   borderaxespad=0.2, handlelength=1.25, handletextpad=0.3, labelspacing=0.15, fontsize='x-small')
+        plt.xlabel(r'True Strain, $\varepsilon$')
+        plt.ylabel(r'True Stress, $\sigma$ [MPa]')
+        plt.tight_layout()
         if output_dir == '':
             plt.show()
         else:
@@ -70,15 +92,3 @@ def uvc_data_multi_plotter(x, test_data, output_dir, file_name, plot_labels, col
 
         handles.append(h)
     return handles
-
-
-def _finish_plots(x):
-    ax = plt.gca()
-    ymin, ymax = ax.get_ylim()
-    ax.set_ylim(ymin * 1.25, ymax)
-    plt.legend(loc='lower right', ncol=len(x) + 1, frameon=False, columnspacing=0.5, mode=None, borderpad=0.,
-               borderaxespad=0.2, handlelength=1.25, handletextpad=0.3)
-    plt.xlabel(r'True Strain, $\varepsilon$')
-    plt.ylabel(r'True Stress, $\sigma$ [MPa]')
-    plt.tight_layout()
-    return

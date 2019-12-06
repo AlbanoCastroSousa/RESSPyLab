@@ -79,17 +79,17 @@ def vc_multi_plot_x_values(x_log_files, plot_names=None, file_name=None):
     x_test = np.loadtxt(x_log_files[0])[-1]
     n_back = (len(x_test) - 4) // 2
     # Parameter Name List
-    y_names = [r'$E$', r'$\sigma_{y,0}$', r'$Q_{\infty}$', r'$b$']
+    y_names = [r'$E$ [MPa]', r'$\sigma_{y,0}$ [MPa]', r'$Q_{\infty}$ [MPa]', r'$b$']
     for i in range(n_back):
-        y_names.append(r'$C_{0}$'.format(i + 1))
+        y_names.append(r'$C_{0}$ [MPa]'.format(i + 1))
         y_names.append(r'$\gamma_{0}$'.format(i + 1))
 
     # Line styles
     ls = ['-', '--', '-.', ':']
     color = '0.15'
     # Set-up plot axes
-    fig_h = 2.2 * (2 + n_back)
-    fig = plt.figure(figsize=(6.5, fig_h))
+    fig_h = 1.5 * (2 + n_back)
+    fig = plt.figure(figsize=(6., fig_h))
     axes = []
     for i, _ in enumerate(y_names):
         axes.append(plt.subplot(2 + n_back, 2, i + 1))
