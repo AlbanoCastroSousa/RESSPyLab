@@ -63,23 +63,31 @@ def multi_plot_obj_grad_lag(fun_log_files, plot_names=None, file_names=None, leg
     return [obj_fun_fig, norm_grad_fig]
 
 
-def vc_multi_plot_x_values(x_log_files, plot_names=None, file_name=None):
+def multi_plot_x_values(x_log_files, plot_names=None, file_name=None, model_type='VC'):
     """ Plots the values of the optimization variables.
 
     :param list x_log_files: [str] (m, ) Paths to the optimization log files for the variable values.
     :param list plot_names: (m, ) Labels for the plot legends, if None then no legend is added to the figures.
     :param str file_name: Full file path to save the figure, if None then doesn't save and just displays.
+    :param str model_type: 'VC' for Voce-Chaboche model, 'UVC' for the updated Voce-Chaboche model.
     :return plt.figure: Figure handle for plot.
 
-    - The log files should be space delimited and follow the convention of parameters for the Voce-Chaboche model
+    - The log files should be space delimited and follow the convention of parameters for the VC/UVC models
     - Only up to 4 log files are supported at the moment (i.e., m <= 4)
     - Your local plt.rcParams will govern much of the overall appearance of the plots
     """
     # Load a single value to get the number of backstresses
     x_test = np.loadtxt(x_log_files[0])[-1]
-    n_back = (len(x_test) - 4) // 2
-    # Parameter Name List
-    y_names = [r'$E$ [MPa]', r'$\sigma_{y,0}$ [MPa]', r'$Q_{\infty}$ [MPa]', r'$b$']
+    if model_type == 'VC':
+        n_back = (len(x_test) - 4) // 2
+        basic_x_rows = 2
+        # Parameter Name List
+        y_names = [r'$E$ [MPa]', r'$\sigma_{y,0}$ [MPa]', r'$Q_{\infty}$ [MPa]', r'$b$']
+    else:
+        n_back = (len(x_test) - 6) // 2
+        basic_x_rows = 3
+        # Parameter Name List
+        y_names = [r'$E$ [MPa]', r'$\sigma_{y,0}$ [MPa]', r'$Q_{\infty}$ [MPa]', r'$b$', r'$D_{\infty}$ [MPa]', r'$a$']
     for i in range(n_back):
         y_names.append(r'$C_{0}$ [MPa]'.format(i + 1))
         y_names.append(r'$\gamma_{0}$'.format(i + 1))
@@ -88,11 +96,11 @@ def vc_multi_plot_x_values(x_log_files, plot_names=None, file_name=None):
     ls = ['-', '--', '-.', ':']
     color = '0.15'
     # Set-up plot axes
-    fig_h = 1.5 * (2 + n_back)
+    fig_h = 1.5 * (basic_x_rows + n_back)
     fig = plt.figure(figsize=(6., fig_h))
     axes = []
     for i, _ in enumerate(y_names):
-        axes.append(plt.subplot(2 + n_back, 2, i + 1))
+        axes.append(plt.subplot(basic_x_rows + n_back, 2, i + 1))
 
     # Plot each of the files
     for op_j, f in enumerate(x_log_files):

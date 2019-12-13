@@ -39,4 +39,4 @@ from .multi_runner import opt_multi_run, tensile_opt_multi_run
 from .summary_tables_maker import summary_tables_maker_uvc, summary_tables_maker_vc
 from .solution_vis import solution_visualizations
 from .uvc_plotter import uvc_data_plotter, uvc_data_multi_plotter
-from .plot_run_stats import multi_plot_obj_grad_lag, vc_multi_plot_x_values
+from .plot_run_stats import multi_plot_obj_grad_lag, multi_plot_x_values
