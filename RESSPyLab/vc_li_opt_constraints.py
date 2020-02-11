@@ -141,8 +141,8 @@ def g6_vco_upper(x, constants, variables):
     """
     gamma1 = x[5]
     gamma2 = x[7]
-    gamma_1_2_ratio_min = constants['rho_gamma_12_inf']
-    return gamma1 / gamma2 - gamma_1_2_ratio_min
+    gamma_1_2_ratio_max = constants['rho_gamma_12_sup']
+    return gamma1 / gamma2 - gamma_1_2_ratio_max
 
 
 # Gradients and Hessians of all the above constraints

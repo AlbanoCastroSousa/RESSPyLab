@@ -132,7 +132,7 @@ def vc_tensile_opt_auglag(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_in
     :param str x_log_file: Path to file to write the primal variable history.
     :param str fun_log_file: Path to file to write the objective function history.
     :param bool filter_data: If True, then filter data, else do not filter the data.
-    :param int max_its: Maximum iterations allowed in analysis.
+    :param int max_its: Maximum iterations allowed in a single trust-region sub-problem step.
     :param float tol: Exit tolerance on the norm of grad[L].
     :param bool make_x0_feasible: If true then makes the first point feasible.
     :return list:
@@ -140,7 +140,7 @@ def vc_tensile_opt_auglag(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_in
         - None
 
     Notes:
-        - The use of vco_limited_info_opt_scipy() is recommended.
+        - The use of vco_limited_info_opt_scipy() is recommended instead of this function.
     """
     # Load the data
     if filter_data:
@@ -219,7 +219,7 @@ def vc_tensile_opt_linesearch(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yiel
         - None
 
     Notes:
-        - The use of vco_limited_info_opt_scipy() is recommended.
+        - The use of vco_limited_info_opt_scipy() is recommended instead of this function.
     """
     # Load the data
     if filter_data:
