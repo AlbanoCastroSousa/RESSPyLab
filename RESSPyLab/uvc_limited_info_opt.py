@@ -8,37 +8,47 @@ from uvc_model import error_single_test_uvc
 from mat_model_error_nda import MatModelErrorNda
 from scipy_dumper import ScipyBasicDumper
 from uvc_constraints import *
+from uvc_li_opt_constraints import *
 from scipy_constr_opt_factory import g1_scipy, grad1_scipy, hess1_scipy, g2_scipy, grad2_scipy, hess2_scipy
 from auglag_factory import constrained_auglag_opt, auglag_factory
+from .data_readers import load_and_filter_data_set, load_data_set
 
 
-def uvc_limited_info_opt_scipy(x_0, data, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup,
-                               rho_gamma_inf, rho_gamma_sup, rho_gamma_12_inf, rho_gamma_12_sup,
-                               rho_d_inf, rho_d_sup,
-                               x_log_file='', fun_log_file='',
-                               max_its=200, tol=1.e-8, make_x0_feasible=True):
+def uvc_tensile_opt_scipy(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup,
+                          rho_gamma_b_inf, rho_gamma_b_sup, rho_gamma_12_inf, rho_gamma_12_sup,
+                          rho_d_inf, rho_d_sup,
+                          x_log_file='', fun_log_file='', filter_data=True,
+                          max_its=600, tol=1.e-8, make_x0_feasible=True):
     """ Return parameters based on a single tensile test for the updated VC model using the trust-constr method.
 
     USE OF THIS METHOD IS STRONGLY DISCOURAGED, USE THE ORIGINAL MODEL.
     """
-    # Minimum value for any x_i
-    min_x_bound = 0.01
+    # Load the data
+    if filter_data:
+        filtered_data = load_and_filter_data_set(file_list)
+    else:
+        filtered_data = load_data_set(file_list)
 
     # Define the objective function
-    objective_function = MatModelErrorNda(error_single_test_uvc, data, use_cols=False)
+    objective_function = MatModelErrorNda(error_single_test_uvc, filtered_data, use_cols=False)
     fun = objective_function.value
     jac = objective_function.grad
     hess = objective_function.hess
 
     # Set up the constraints for the optimization
+    # Minimum value for any x_i
+    min_x_bound = 0.01
     x_lb = [min_x_bound for i in range(len(x_0))]
     x_ub = [np.inf for i in range(len(x_0))]
     bounds = opt.Bounds(x_lb, x_ub, keep_feasible=True)
+    # Bounds on inequality constraints
+    constr_lb = -np.inf
+    constr_ub = 0.
 
     # The constraint functions in scipy format
     g_constants = {'rho_yield_inf': rho_yield_inf, 'rho_yield_sup': rho_yield_sup,
                    'rho_iso_inf': rho_iso_inf, 'rho_iso_sup': rho_iso_sup,
-                   'rho_gamma_inf': rho_gamma_inf, 'rho_gamma_sup': rho_gamma_sup,
+                   'rho_gamma_b_inf': rho_gamma_b_inf, 'rho_gamma_b_sup': rho_gamma_b_sup,
                    'rho_gamma_12_inf': rho_gamma_12_inf, 'rho_gamma_12_sup': rho_gamma_12_sup,
                    'rho_d_inf': rho_d_inf, 'rho_d_sup': rho_d_sup}
     # Updated model hardening constraints
@@ -90,6 +100,9 @@ def uvc_limited_info_opt_scipy(x_0, data, rho_iso_inf, rho_iso_sup, rho_yield_in
     scipy_sol = opt.minimize(fun, np.array(x_0), method='trust-constr', jac=jac, hess=hess, bounds=bounds,
                              constraints=constraints, callback=dumper.dump,
                              options={'maxiter': max_its, 'verbose': 2, 'gtol': tol})
+    # Check if the constraints were satisfied
+    uvc_constraint_check(scipy_sol.x, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup, rho_gamma_b_inf,
+                         rho_gamma_b_sup, rho_d_inf, rho_d_sup)
     return [scipy_sol, dumper]
 
 
@@ -161,10 +174,10 @@ def make_feasible_uvc(x_0, c):
     # Get the average of the bounds
     rho_yield_avg = 0.5 * (c['rho_yield_inf'] + c['rho_yield_sup'])
     rho_iso_avg = 0.5 * (c['rho_iso_inf'] + c['rho_iso_sup'])
-    rho_gamma_avg = 0.5 * (c['rho_gamma_inf'] + c['rho_gamma_sup'])
+    rho_gamma_avg = 0.5 * (c['rho_gamma_b_inf'] + c['rho_gamma_b_sup'])
     rho_d_avg = 0.5 * (c['rho_d_inf'] + c['rho_d_sup'])
     # Calculate the feasible set (considering only 1 backstress)
-    gamma2_0 = 1. / c['rho_gamma_12_inf'] * 0.95 * x_0[7]
+    gamma2_0 = 1. / rho_gamma_avg * x_0[7]
     c1_0 = -x_0[7] * (-1. + rho_iso_avg) * (-1 + rho_yield_avg) * x_0[1]
     q_inf_0 = -c1_0 * rho_iso_avg / (x_0[7] * (-1. + rho_iso_avg))
     b_0 = 1. / rho_gamma_avg * x_0[7]
@@ -174,3 +187,30 @@ def make_feasible_uvc(x_0, c):
     elif n_backstresses == 1:
         x_0[[2, 3, 4, 6]] = [q_inf_0, b_0, d_0, c1_0]
     return x_0
+
+
+def uvc_constraint_check(x_opt, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup, rho_gamma_b_inf,
+                         rho_gamma_b_sup, rho_d_inf, rho_d_sup):
+    """ Checks if each of g_3, g_4, and g_5 were satisfied. """
+    n_backstresses = int((len(x_opt) - 6) // 2)
+    sum_c_gamma = 0.
+    for i in range(n_backstresses):
+        sum_c_gamma += x_opt[6 + 2 * i] / x_opt[7 + 2 * i]
+    rho_yield_ratio = (x_opt[1] + x_opt[2] + sum_c_gamma) / x_opt[1]
+    rho_iso_ratio = x_opt[2] / (x_opt[2] + sum_c_gamma)
+    rho_gamma_b_ratio = x_opt[7] / x_opt[3]
+    rho_d_ratio = x_opt[4] / (x_opt[2] + sum_c_gamma)
+    print('The rho_iso ratio is = {0}'.format(rho_iso_ratio))
+    print('The rho_yield ratio is = {0}'.format(rho_yield_ratio))
+    print('The rho_gamma_b ratio is = {0}'.format(rho_gamma_b_ratio))
+    print('The rho_d ratio is = {0}'.format(rho_d_ratio))
+
+    if not (rho_iso_inf <= rho_iso_ratio <= rho_iso_sup):
+        print('Constraint on rho_iso violated!')
+    if not (rho_yield_inf <= rho_yield_ratio <= rho_yield_sup):
+        print('Constraint on rho_yield violated!')
+    if not (rho_gamma_b_inf <= rho_gamma_b_ratio <= rho_gamma_b_sup):
+        print('Constraint on rho_gamma violated!')
+    if not (rho_d_inf <= rho_d_ratio <= rho_d_sup):
+        print('Constraint on rho_d violated!')
+    return
