@@ -21,7 +21,7 @@ def dir_maker(directory):
     return
 
 
-def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model_type):
+def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model_type, timing=False):
     """ Runs optimization for VC/UVC model multiple times sequentially.
 
     :param list data_dirs: [str] Paths to the data directories that contain the stress-strain data files.
@@ -30,6 +30,7 @@ def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model
     :param list should_filter: [bool] If true, then apply filter to the data set, if False then do nothing.
     :param list x_0s: [np.ndarray] Starting point for each data sets.
     :param str model_type: 'VC' to use the Voce-Chaboche, 'UVC' to use the Updated Voce-Chaboche model.
+    :param bool timing: If True then saves a time log file for each run, else don't save a time log file.
     :return None: None
 
     Notes:
@@ -46,6 +47,9 @@ def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model
         file_list = [os.path.join(d_dir, p) for p in os.listdir(d_dir)]
         filt = should_filter[i]
         x_start = x_0s[i].copy()
+        if timing:
+            time_log_file = os.path.join(o_dir, name + '_time_log.txt')
+            start_time = time.time()
         if model_type == 'VC':
             vc_param_opt(x_start, file_list, x_log_file, fun_log_file, filt)
         elif model_type == 'UVC':
@@ -56,9 +60,13 @@ def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model
             except RuntimeError as e:
                 print(e)
                 print('Encountered error in analysis of\n\t{0}\nMoving to next data set.'.format(d_dir))
-
         else:
             raise ValueError('model_type should be either VC or UVC')
+
+        if timing:
+            end_time = time.time()
+            with open(time_log_file, 'w') as time_file:
+                time_file.write('Start: {0},End: {1},Elapsed: {2}'.format(start_time, end_time, end_time - start_time))
     return
 
 
