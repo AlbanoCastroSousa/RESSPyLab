@@ -34,7 +34,8 @@ def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model
     :return None: None
 
     Notes:
-        - The data directories must only contain stress-strain data files.
+        - The data must be in comma separated format (csv), only .csv files in the data directories will be read.
+        - The only .csv files in the data directories should be stress-strain data.
         - This function creates each output directory if they do not already exist.
     """
     for i, d_dir in enumerate(data_dirs):
@@ -44,7 +45,7 @@ def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model
         name = data_names[i]
         x_log_file = os.path.join(o_dir, name + '_x_log.txt')
         fun_log_file = os.path.join(o_dir, name + '_fun_log.txt')
-        file_list = [os.path.join(d_dir, p) for p in os.listdir(d_dir)]
+        file_list = [os.path.join(d_dir, p) for p in os.listdir(d_dir) if p[-3:] == 'csv']
         filt = should_filter[i]
         x_start = x_0s[i].copy()
         if timing:
