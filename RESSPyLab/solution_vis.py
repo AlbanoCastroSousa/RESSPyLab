@@ -4,7 +4,8 @@ Visualize the positive definiteness of the Hessian and contour plots of the obje
 import numpy as np
 import os
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
+from mpl_import import *
 import matplotlib.lines as mlines
 
 from vc_parameter_identification import vc_get_hessian
