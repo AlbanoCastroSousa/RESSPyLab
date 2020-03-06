@@ -5,7 +5,8 @@ from RESSPyLab import opt_multi_run
 # NOTE: THIS IS JUST A SAMPLE FILE TO ILLUSTRATE THE SET-UP OF THE opt_multi_run FUNCTION AND DOES NOT ACTUALLY RUN
 
 # Locations of data sets
-# opt_multi_run will load all the .csv files in each of the data directories, there must be no other files in each directory
+# opt_multi_run will load all the .csv files in each of the data directories
+# The only .csv files in these directories should be those that contain stress-strain data
 data_dirs = ['dir1/my_data1/', 'dir1/my_data2/', 'dir1/my_data3/']
 
 # Should use the "filter_data" option for each data set

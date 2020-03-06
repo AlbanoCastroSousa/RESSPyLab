@@ -45,7 +45,7 @@ def opt_multi_run(data_dirs, output_dirs, data_names, should_filter, x_0s, model
         name = data_names[i]
         x_log_file = os.path.join(o_dir, name + '_x_log.txt')
         fun_log_file = os.path.join(o_dir, name + '_fun_log.txt')
-        file_list = [os.path.join(d_dir, p) for p in os.listdir(d_dir) if p[-3:] == 'csv']
+        file_list = [os.path.join(d_dir, p) for p in os.listdir(d_dir) if p[-4:] == '.csv']
         filt = should_filter[i]
         x_start = x_0s[i].copy()
         if timing:
