@@ -44,7 +44,7 @@ def uvc_data_plotter(x, test_data, output_dir, file_name, plot_label):
     return handles
 
 
-def uvc_data_multi_plotter(x, test_data, output_dir, file_name, plot_labels, colors, styles):
+def uvc_data_multi_plotter(x, test_data, output_dir, file_name, plot_labels, colors, styles, test_color='k'):
     """ Creates plots of updated Voce-Chaboche model overlayed on the test data for multiple parameter sets.
 
     :param list x: (np.array) Input parameters to the updated Voce-Chaboche model.
@@ -54,6 +54,7 @@ def uvc_data_multi_plotter(x, test_data, output_dir, file_name, plot_labels, col
     :param list plot_labels: (str) Names of the non test data lines in the legend.
     :param list colors: (str) Colors for each line.
     :param list styles: (str) Line style for each line.
+    :param str test_color: Color for the test data line.
     :return list: Handles to each of the created plots.
 
     - Outputs in .pdf format
@@ -62,7 +63,7 @@ def uvc_data_multi_plotter(x, test_data, output_dir, file_name, plot_labels, col
     handles = []
     for i, test in enumerate(test_data):
         h = plt.figure()
-        plt.plot(test['e_true'], test['Sigma_true'], c='k', label='Test', lw=0.75)
+        plt.plot(test['e_true'], test['Sigma_true'], c=test_color, label='Test', lw=0.75)
         # Plot for all the sets of parameters
         for j, xj in enumerate(x):
             sim_curve_upd = sim_curve_uvc(xj, test)

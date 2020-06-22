@@ -6,6 +6,7 @@ from RESSPyLab import tensile_opt_multi_run
 
 # Locations of tensile tests
 # tensile_opt_multi_run will load only the specified .csv files, each item is a different optimization run
+# each file should be in a different directory (e.g., my_data1/, my_data2/) otherwise the output may overwrite
 data_dirs = ['dir1/my_data1/tensile_test1.csv', 'dir1/my_data2/tensile_test2.csv', 'dir1/my_data3/tensile_test3.csv']
 
 # Should use the "filter_data" option for each data set
