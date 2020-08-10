@@ -145,6 +145,24 @@ def g6_vco_upper(x, constants, variables):
     return gamma1 / gamma2 - gamma_1_2_ratio_max
 
 
+def g_kin_ratio_vco_lower(x, constants, variables):
+    c1 = x[4]
+    gamma1 = x[5]
+    c2 = x[6]
+    gamma2 = x[7]
+    gamma_kin_ratio_min = constants['rho_kin_ratio_inf']
+    return -(c1 / gamma1) / (c2 / gamma2) + gamma_kin_ratio_min
+
+
+def g_kin_ratio_vco_upper(x, constants, variables):
+    c1 = x[4]
+    gamma1 = x[5]
+    c2 = x[6]
+    gamma2 = x[7]
+    gamma_kin_ratio_max = constants['rho_kin_ratio_sup']
+    return (c1 / gamma1) / (c2 / gamma2) - gamma_kin_ratio_max
+
+
 # Gradients and Hessians of all the above constraints
 def g3_vco_lower_gradient(x, constants, variables):
     fun_wrapper = lambda x1: g3_vco_lower(x1, constants, variables)
@@ -202,6 +220,22 @@ def g6_vco_upper_gradient(x, constants, variables):
     return grad
 
 
+def g_kin_ratio_vco_lower_gradient(x, constants, variables):
+    fun_wrapper = lambda x1: g_kin_ratio_vco_lower(x1, constants, variables)
+    grad_fun = nda.Gradient(fun_wrapper)
+    grad = grad_fun(x)
+    return grad
+
+
+def g_kin_ratio_vco_upper_gradient(x, constants, variables):
+    fun_wrapper = lambda x1: g_kin_ratio_vco_upper(x1, constants, variables)
+    grad_fun = nda.Gradient(fun_wrapper)
+    grad = grad_fun(x)
+    return grad
+
+
+# Hessians
+
 def g3_vco_lower_hessian(x, constants, variables):
     fun_wrapper = lambda x1: g3_vco_lower(x1, constants, variables)
     hess_fun = nda.Hessian(fun_wrapper)
@@ -253,6 +287,20 @@ def g6_vco_lower_hessian(x, constants, variables):
 
 def g6_vco_upper_hessian(x, constants, variables):
     fun_wrapper = lambda x1: g6_vco_upper(x1, constants, variables)
+    hess_fun = nda.Hessian(fun_wrapper)
+    hess = hess_fun(x)
+    return hess
+
+
+def g_kin_ratio_vco_lower_hessian(x, constants, variables):
+    fun_wrapper = lambda x1: g_kin_ratio_vco_lower(x1, constants, variables)
+    hess_fun = nda.Hessian(fun_wrapper)
+    hess = hess_fun(x)
+    return hess
+
+
+def g_kin_ratio_vco_upper_hessian(x, constants, variables):
+    fun_wrapper = lambda x1: g_kin_ratio_vco_upper(x1, constants, variables)
     hess_fun = nda.Hessian(fun_wrapper)
     hess = hess_fun(x)
     return hess
