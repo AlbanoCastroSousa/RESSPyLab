@@ -31,6 +31,7 @@ Features
 * Implicit integration scheme for non-linear uniaxial Voce and Chaboche metal plasticity
 * Newton Trust-Region (NTR) with Singular Value Decomposition (SVD) and Jacobi(J) preconditioning solver
 * Voce and Chaboche material parameter estimation with NTR-SVD and NTR-J
+
 * Implicit integration scheme for non-linear uniaxial Updated Voce and Chaboche (UVC) metal plasticity
 * Updated Voce and Chaboche material parameter estimation
 

@@ -12,7 +12,7 @@ History
 
 * Added Jacobi Preconditioning / Fixed Steihaug-Toint bug
 
-1.1.2 (2020-08-11)
+1.1 (2020-08-11)
 ------------------
 
 * Added Limited Information algorithms

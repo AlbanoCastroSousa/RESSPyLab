@@ -4,7 +4,7 @@
 
 __author__ = """Albano de Castro e Sousa and Alexander R. Hartloper"""
 __email__ = 'albano.sousa@epfl.ch'
-__version__ = '1.1.2'
+__version__ = '1.1.3'
 
 # From the base version
 from .RESSPyLab import errorTest_scl
