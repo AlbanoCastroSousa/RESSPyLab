@@ -40,7 +40,8 @@ MOCK_MODULES = ['numpy', 'pandas', 'numdifftools','numdifftools.nd_algopy','nd_a
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = mock.Mock()
 
-#import RESSPyLab
+
+import RESSPyLab
 
 # -- General configuration ---------------------------------------------
 
