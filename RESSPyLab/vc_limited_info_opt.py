@@ -40,6 +40,10 @@ def vc_tensile_opt_scipy(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf
         - (np.array): Final primal variables.
         - (ScipyBasicDumper) Dumper used in analysis.
     """
+    # Ensure x_0 is an array and not a list
+    if isinstance(x_0, list):
+        x_0 = np.array(x_0)
+
     # Load the data
     if filter_data:
         filtered_data = load_and_filter_data_set(file_list)
@@ -110,7 +114,7 @@ def vc_tensile_opt_scipy(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf
     # Check if the constraints were satisfied
     vc_constraint_check(scipy_sol.x, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup, rho_gamma_b_inf,
                         rho_gamma_b_sup)
-    return [scipy_sol, dumper]
+    return [scipy_sol.x, dumper]
 
 
 def vc_tensile_opt_auglag(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup,
