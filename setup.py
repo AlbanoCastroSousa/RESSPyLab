@@ -15,6 +15,7 @@ requirements = [
     'Click>=6.0',
     'numpy>=1.10.2',
     'pandas',
+    'algopy',
     'numdifftools',
     'matplotlib',
     'quadprog',
@@ -32,11 +33,11 @@ test_requirements = [
 
 setup(
     name='RESSPyLab',
-    version='0.1.5',
+    version='1.1.0',
     description="Resilient Steel Structures Laboratory (RESSLab) Python Library",
     long_description=readme + '\n\n' + history,
-    author="Albano de Castro e Sousa",
-    author_email='albano.sousa@epfl.ch',
+    author="Albano de Castro e Sousa & Alex Hartloper",
+    author_email='albano.sousa@epfl.ch & alexander.hartloper@epfl.ch',
     url='https://github.com/AlbanoCastroSousa/RESSPyLab',
     packages=['RESSPyLab'],
     entry_points={
