@@ -6,16 +6,9 @@ RESSPyLab
 .. image:: https://img.shields.io/pypi/v/RESSPyLab.svg
         :target: https://pypi.python.org/pypi/RESSPyLab
 
-.. image:: https://img.shields.io/travis/AlbanoCastroSousa/RESSPyLab.svg
-        :target: https://travis-ci.org/AlbanoCastroSousa/RESSPyLab
-
 .. image:: https://readthedocs.org/projects/RESSPyLab/badge/?version=latest
         :target: https://RESSPyLab.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
-
-.. image:: https://pyup.io/repos/github/AlbanoCastroSousa/RESSPyLab/shield.svg
-     :target: https://pyup.io/repos/github/AlbanoCastroSousa/RESSPyLab/
-     :alt: Updates
 
 
 Welcome to the Resilient Steel Structures Laboratory (RESSLab) Python Library. 
@@ -38,6 +31,10 @@ Features
 * Implicit integration scheme for non-linear uniaxial Voce and Chaboche metal plasticity
 * Newton Trust-Region (NTR) with Singular Value Decomposition (SVD) and Jacobi(J) preconditioning solver
 * Voce and Chaboche material parameter estimation with NTR-SVD and NTR-J
+* Implicit integration scheme for non-linear uniaxial Updated Voce and Chaboche (UVC) metal plasticity
+* Updated Voce and Chaboche material parameter estimation
+
+* Limited Information algorithms for parameter estimation using a single tensile test
 
 
 Credits
