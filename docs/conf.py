@@ -40,7 +40,7 @@ MOCK_MODULES = ['numpy', 'pandas', 'numdifftools','numdifftools.nd_algopy','nd_a
 for mod_name in MOCK_MODULES:
     sys.modules[mod_name] = mock.Mock()
 
-import RESSPyLab
+#import RESSPyLab
 
 # -- General configuration ---------------------------------------------
 
@@ -65,7 +65,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'RESSPyLab'
-copyright = u"2017, Albano de Castro e Sousa"
+copyright = u"2020, RESSLab"
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
@@ -219,7 +219,7 @@ latex_elements = {
 latex_documents = [
     ('index', 'RESSPyLab.tex',
      u'RESSPyLab Documentation',
-     u'Albano de Castro e Sousa', 'manual'),
+     u'Albano de Castro e Sousa and Alex Hartloper', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at
@@ -250,7 +250,7 @@ latex_documents = [
 man_pages = [
     ('index', 'RESSPyLab',
      u'RESSPyLab Documentation',
-     [u'Albano de Castro e Sousa'], 1)
+     [u'Albano de Castro e Sousa and Alex Hartloper'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -265,7 +265,7 @@ man_pages = [
 texinfo_documents = [
     ('index', 'RESSPyLab',
      u'RESSPyLab Documentation',
-     u'Albano de Castro e Sousa',
+     u'Albano de Castro e Sousa and Alex Hartloper',
      'RESSPyLab',
      'One line description of project.',
      'Miscellaneous'),
