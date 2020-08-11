@@ -40,7 +40,7 @@ class AugLagGenSolver:
         self.total_iterations = 0
         self.maximum_total_iterations = int(1e6)
         self.maximum_ntr_iterations = int(1e6)
-        self.maximum_auglag_iterations = 1000
+        self.maximum_auglag_iterations = 20  # needs to be sufficiently larger than the exponent of auglag_tolerance
         self.subproblem_solver = subproblem_solver
         self.auglag_tolerance = np.sqrt(EPS_MACHINE / 10.)  # around 1.e-8
         self.verbose_dump = verbose_dump

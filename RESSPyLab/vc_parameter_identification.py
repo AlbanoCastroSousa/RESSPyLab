@@ -3,10 +3,10 @@ Top level function for calibration of the original Voce-Chaboche model.
 """
 import numpy as np
 from numdifftools import nd_algopy as nda
-from auglag_factory import auglag_factory, constrained_auglag_opt
-from data_readers import load_and_filter_data_set, load_data_set
-from uvc_model import test_total_area
-from RESSPyLab import errorTest_scl
+from .auglag_factory import auglag_factory, constrained_auglag_opt
+from .data_readers import load_and_filter_data_set, load_data_set
+from .uvc_model import test_total_area
+from .RESSPyLab import errorTest_scl
 
 
 def vc_param_opt(x_0, file_list, x_log_file, fxn_log_file, filter_data=True):
@@ -64,5 +64,6 @@ def vc_consistency_metric(x_base, x_sample, data):
     x_diff = x_sample - x_base
     hess_base = vc_get_hessian(x_base, data)
     numerator = np.dot(x_diff, hess_base.dot(x_diff))
-    denominator = test_total_area(x_base, data)
+    # Total area is independent of the x choice, just need to run this
+    denominator = test_total_area(np.insert(x_base, 4, [0., 1.]), data)
     return np.sqrt(numerator / denominator)

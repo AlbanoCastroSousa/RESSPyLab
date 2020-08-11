@@ -32,10 +32,14 @@ from .uvc_model import sim_curve_uvc, calc_phi_total, uvc_consistency_metric
 from .sqp_factory import sqp_factory
 from .uvc_parameter_identification import uvc_param_opt, uvc_param_opt_ls
 
+# For tensile only optimization
+from .vc_limited_info_opt import vc_tensile_opt_scipy
+
 # For running several optimizations sequentially
-from .multi_runner import opt_multi_run
+from .multi_runner import opt_multi_run, tensile_opt_multi_run
 
 # For output
 from .summary_tables_maker import summary_tables_maker_uvc, summary_tables_maker_vc
 from .solution_vis import solution_visualizations
 from .uvc_plotter import uvc_data_plotter, uvc_data_multi_plotter
+from .plot_run_stats import multi_plot_obj_grad_lag, multi_plot_x_values

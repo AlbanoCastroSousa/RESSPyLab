@@ -1,5 +1,5 @@
 """@package vcu_constraints
-Constraints for the updated Voce-Chaboche model to maintain a positive tangent modulus and for limited information opt.
+Constraints for the updated Voce-Chaboche model to maintain a positive tangent modulus and positive parameters.
 """
 import numpy as np
 from numdifftools import nd_algopy as nda
