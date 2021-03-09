@@ -3,7 +3,7 @@ Reduced conjugate gradient solver for the trust region problem with linear const
 """
 import numpy as np
 import numpy.linalg as la
-from model_minimizer import trust_region_intersect, model_minimizer
+from .model_minimizer import trust_region_intersect, model_minimizer
 
 
 def reduced_cg(g, c, a, b, delta):
@@ -68,7 +68,7 @@ def reduced_cg(g, c, a, b, delta):
     if la.norm(x_sol_prev, 2) > delta * radius_reduction_factor:
         # The constraints are not feasible with the trust-region, so calculate a relaxation and continue
         # Choose r = a.v - b => then we solve min_x x.g.x + 1/2 x.c ; s.t a.x == r --> replace b with r
-        print 'Applying a relaxation to the constraint.'
+        print ('Applying a relaxation to the constraint.')
         v = solve_normal_step(a, -b, radius_reduction_factor * delta)
         r = np.matmul(a, v)  # relaxation
         x_y = la.solve(np.matmul(a, y), r)

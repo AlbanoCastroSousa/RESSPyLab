@@ -2,7 +2,7 @@
 Implements the reciprocal barrier function.
 """
 
-from barrier_function import BarrierFunction
+from .barrier_function import BarrierFunction
 
 
 class ReciprocalBarrier(BarrierFunction):

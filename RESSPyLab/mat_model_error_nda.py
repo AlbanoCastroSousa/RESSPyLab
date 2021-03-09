@@ -2,7 +2,7 @@
 Contains the objective function and its derivatives for optimization problems.
 """
 from numdifftools import nd_algopy as nda
-from barrier_function import BarrierFunction
+from .barrier_function import BarrierFunction
 
 
 class MatModelErrorNda:

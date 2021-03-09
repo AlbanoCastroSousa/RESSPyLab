@@ -934,11 +934,11 @@ def NTR_J_Solver_Lag(f, df, Hf, Lag_arg, tol_k):
         if norm_grad < Tol:
             break
         elif np.linalg.norm(dk) < TOL_Approx and Delta < TOL_Approx:
-            print " WARNING: SECONDARY CONVERGENCE CRITERIA TRIGGERED. NORM OF GRADIENT NOT WITHIN TOLERANCE, THUS ONLY AN APPROXIMATE SOLUTION IS OBTAINED"
+            print(" WARNING: SECONDARY CONVERGENCE CRITERIA TRIGGERED. NORM OF GRADIENT NOT WITHIN TOLERANCE, THUS ONLY AN APPROXIMATE SOLUTION IS OBTAINED")
             break
 
         if nit % dump_freq == 0:
-            print x
+            print(x)
 
     return Lag_arg_k1
 
@@ -1049,22 +1049,22 @@ def AugLag_Opt(x, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup, listCl
         # print ("Norm gradLag=", np.sqrt(np.dot(gradLag_vec, gradLag_vec)), " ,Norm_ineq=", norm_ineq)
 
         if np.sqrt(np.dot(gradLag_vec, gradLag_vec)) < TOL and norm_ineq < TOL:
-            print "####################################################"
-            print "### SUCCESSFUL AUGMENTED LAGRANGIAN OPTIMIZATION ###"
-            print "####################################################"
-            print "########## TERMINATING AUGMENTED LAGRANGIAN ########"
-            print "####################################################"
+            print ("####################################################")
+            print ("### SUCCESSFUL AUGMENTED LAGRANGIAN OPTIMIZATION ###")
+            print ("####################################################")
+            print ("########## TERMINATING AUGMENTED LAGRANGIAN ########")
+            print ("####################################################")
             print ("x = ", x)
             break
         elif np.linalg.norm(d) < TOL_Approx and Delta < TOL_Approx:
-            print " WARNING: SECONDARY CONVERGENCE CRITERIA TRIGGERED. NORM OF GRADIENT NOT WITHIN TOLERANCE."
-            print " ONLY AN APPROXIMATE SOLUTION IS OBTAINED"
+            print (" WARNING: SECONDARY CONVERGENCE CRITERIA TRIGGERED. NORM OF GRADIENT NOT WITHIN TOLERANCE.")
+            print (" ONLY AN APPROXIMATE SOLUTION IS OBTAINED")
             approxIt = approxIt + 1
             Delta = 1.0
             if approxIt > approxIt_lim:
-                print "####################################"
-                print "# TERMINATING AUGMENTED LAGRANGIAN #"
-                print "####################################"
+                print ("####################################")
+                print ("# TERMINATING AUGMENTED LAGRANGIAN #")
+                print ("####################################")
                 print ("x = ", x)
                 break
 

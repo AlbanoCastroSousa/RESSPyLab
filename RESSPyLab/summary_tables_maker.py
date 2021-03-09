@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from uvc_model import calc_phi_total
+from .uvc_model import calc_phi_total
 
 
 def summary_tables_maker_uvc(material_definition, x_file_paths, data, peeq='sat'):
@@ -116,7 +116,7 @@ def _table_maker(material_definition, x_file_paths, data, parameter_labels, metr
     summary_table[parameter_labels[0]] = summary_table[parameter_labels[0]] / 1000.
     # Set the index name to Materials
     summary_table.index.name = 'Material'
-    print summary_table.to_latex(escape=False)
+    print (summary_table.to_latex(escape=False))
 
     # Make the second table
     summary_table_2 = pd.DataFrame()
@@ -142,7 +142,7 @@ def _table_maker(material_definition, x_file_paths, data, parameter_labels, metr
     summary_table_2.columns = metric_labels
     # Set the index name to Materials
     summary_table_2.index.name = 'Material'
-    print summary_table_2.to_latex(escape=False)
+    print (summary_table_2.to_latex(escape=False))
 
     return [summary_table, summary_table_2]
 

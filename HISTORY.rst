@@ -16,3 +16,8 @@ History
 ------------------
 
 * Added Limited Information algorithms
+
+1.1.5 (2021-03-09)
+------------------
+
+* Fixing general Python 3 compatibility issues

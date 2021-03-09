@@ -4,7 +4,7 @@ Model minimizer method to solve the trust-region subproblem.
 import numpy as np
 from numpy import linalg as la
 
-from posdef_check import posdef_check
+from .posdef_check import posdef_check
 
 TOL = np.sqrt(np.finfo(float).eps)
 

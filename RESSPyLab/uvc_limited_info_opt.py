@@ -3,14 +3,14 @@ Functions for limited information optimization using the updated Voce-Chaboche m
 """
 import scipy.optimize as opt
 
-from vc_limited_info_opt import GWrapper, DummyResults
-from uvc_model import error_single_test_uvc
-from mat_model_error_nda import MatModelErrorNda
-from scipy_dumper import ScipyBasicDumper
-from uvc_constraints import *
-from uvc_li_opt_constraints import *
-from scipy_constr_opt_factory import g1_scipy, grad1_scipy, hess1_scipy, g2_scipy, grad2_scipy, hess2_scipy
-from auglag_factory import constrained_auglag_opt, auglag_factory
+from .vc_limited_info_opt import GWrapper, DummyResults
+from .uvc_model import error_single_test_uvc
+from .mat_model_error_nda import MatModelErrorNda
+from .scipy_dumper import ScipyBasicDumper
+from .uvc_constraints import *
+from .uvc_li_opt_constraints import *
+from .scipy_constr_opt_factory import g1_scipy, grad1_scipy, hess1_scipy, g2_scipy, grad2_scipy, hess2_scipy
+from .auglag_factory import constrained_auglag_opt, auglag_factory
 from .data_readers import load_and_filter_data_set, load_data_set
 
 

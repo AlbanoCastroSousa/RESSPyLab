@@ -1,16 +1,16 @@
 """@package sqp_factory
 Functions to easily set-up analysis using the RESSPyLab SQP solvers.
 """
-from log_barrier import LogBarrier
-from reciprocal_barrier import ReciprocalBarrier
-from RESSPyLab import errorTest_scl
-from uvc_model import error_single_test_uvc
-from basic_dumper import BasicDumper
-from mat_model_error_nda import MatModelErrorNda
-from rpl_constraint import RPLConstraint
-from eq_from_ineq_constraint import EqFromIneqConstraint
-from sqp_trustregion import SqpTrustregion
-from sqp_linesearch import SqpLinesearch
+from .log_barrier import LogBarrier
+from .reciprocal_barrier import ReciprocalBarrier
+from .RESSPyLab import errorTest_scl
+from .uvc_model import error_single_test_uvc
+from .basic_dumper import BasicDumper
+from .mat_model_error_nda import MatModelErrorNda
+from .rpl_constraint import RPLConstraint
+from .eq_from_ineq_constraint import EqFromIneqConstraint
+from .sqp_trustregion import SqpTrustregion
+from .sqp_linesearch import SqpLinesearch
 
 
 def sqp_factory(sqp_solver_type, model_type, barrier_type, test_data, constraint_dict, dump_file='', function_file=''):
@@ -42,7 +42,7 @@ def sqp_factory(sqp_solver_type, model_type, barrier_type, test_data, constraint
     elif barrier_type == 'none':
         b = None
     else:
-        print 'Warning: invalid barrier type, proceeding without a barrier!'
+        print ('Warning: invalid barrier type, proceeding without a barrier!')
         b = None
 
     objective_function = MatModelErrorNda(f, test_data, b)

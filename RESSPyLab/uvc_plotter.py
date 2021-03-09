@@ -1,8 +1,8 @@
 """@package vcu_plotter
 Plot optimization results and test data for the updated Voce-Chaboche model.
 """
-from uvc_model import sim_curve_uvc
-from mpl_import import *
+from .uvc_model import sim_curve_uvc
+from .mpl_import import *
 
 
 def uvc_data_plotter(x, test_data, output_dir, file_name, plot_label):

@@ -2,7 +2,7 @@
 Object to convert inequality to equality constraints through slack variables.
 """
 import numpy as np
-from rpl_constraint import RPLConstraint
+from .rpl_constraint import RPLConstraint
 
 
 class EqFromIneqConstraint(RPLConstraint):

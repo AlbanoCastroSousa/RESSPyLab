@@ -154,14 +154,14 @@ class SqpSolver:
         x_0 = x_0.reshape(-1, 1)
         dual_x_0 = dual_x_0.reshape(-1, 1)
 
-        print "Starting SQP minimization..."
+        print ("Starting SQP minimization...")
         [x, dual_x, exit_info] = self.globalized_sqp(x_0, dual_x_0)
         conv_criteria = exit_info['val']
 
-        print exit_info['msg']
-        print "Exiting with ||grad[L]|| = {0:e}".format(conv_criteria)
-        print "x = {0}".format(x.reshape(-1))
-        print "dual_x = {0}".format(dual_x.reshape(-1))
+        print (exit_info['msg'])
+        print ("Exiting with ||grad[L]|| = {0:e}".format(conv_criteria))
+        print ("x = {0}".format(x.reshape(-1)))
+        print ("dual_x = {0}".format(dual_x.reshape(-1)))
 
         return [x, dual_x]
 
@@ -180,13 +180,13 @@ class SqpSolver:
         x_0 = x_0.reshape(-1, 1)
         dual_x_0 = dual_x_0.reshape(-1, 1)
 
-        print "Starting SQP minimization..."
+        print ("Starting SQP minimization...")
         [x, dual_x, exit_info] = self.globalized_sqp(x_0, dual_x_0)
         convergence_criteria = exit_info['val']
 
-        print exit_info['msg']
-        print "Exiting with ||grad[L]|| = {0:e}".format(convergence_criteria)
-        print "x = {0}".format(x.reshape(-1))
-        print "dual_x = {0}".format(dual_x.reshape(-1))
+        print (exit_info['msg'])
+        print ("Exiting with ||grad[L]|| = {0:e}".format(convergence_criteria))
+        print ("x = {0}".format(x.reshape(-1)))
+        print ("dual_x = {0}".format(dual_x.reshape(-1)))
 
         return [x, dual_x, convergence_criteria]

@@ -1,11 +1,11 @@
 """@package sqp_linsearch
 Implements the SQP linesearch method.
 """
-from sqp_solver import SqpSolver
+from .sqp_solver import SqpSolver
 import numpy as np
 import numpy.linalg as la
 from quadprog import solve_qp
-from modified_cholesky import modified_cholesky
+from .modified_cholesky import modified_cholesky
 from collections import OrderedDict
 
 
@@ -271,7 +271,7 @@ class SqpLinesearch(SqpSolver):
 
         if used_correction:
             dx_total = d_x + correction
-            print "Used 2nd order correction in line-search."  # todo: remove this at some point
+            print ("Used 2nd order correction in line-search.")  # todo: remove this at some point
         else:
             dx_total = d_x * step_length
 

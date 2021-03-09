@@ -4,10 +4,10 @@ Functions to package the scipy optimization methods.
 import numpy as np
 import scipy.optimize as opt
 
-from uvc_model import error_single_test_uvc
-from mat_model_error_nda import MatModelErrorNda
-from scipy_dumper import ScipyBasicDumper
-from uvc_constraints import g1_constraint, g1_gradient, g1_hessian, g2_constraint, g2_gradient, g2_hessian
+from .uvc_model import error_single_test_uvc
+from .mat_model_error_nda import MatModelErrorNda
+from .scipy_dumper import ScipyBasicDumper
+from .uvc_constraints import g1_constraint, g1_gradient, g1_hessian, g2_constraint, g2_gradient, g2_hessian
 
 
 # Set solver and run

@@ -28,7 +28,7 @@ class ScipyBasicDumper:
         it_num = state.niter
         f_val = state.fun
         norm_grad_lag = state.optimality
-        with open(self.dump_file, 'ab') as fi:
+        with open(self.dump_file, 'a') as fi:
             np.savetxt(fi, x.reshape((1, len(x))), fmt='%7.6e')
-        with open(self.function_file, 'ab') as fi:
+        with open(self.function_file, 'a') as fi:
             fi.write('{0}, {1:5.4e}, {2:5.4e}\n'.format(it_num, f_val, norm_grad_lag))

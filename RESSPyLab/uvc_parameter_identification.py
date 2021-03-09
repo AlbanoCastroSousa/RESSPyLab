@@ -4,12 +4,12 @@ Top level functions for parameter identification using the updated Voce-Chaboche
 from __future__ import print_function
 import numpy as np
 
-from scipy_constr_opt_factory import scipy_factory
-from sqp_factory import sqp_factory
-from auglag_factory import auglag_factory
-from data_readers import load_and_filter_data_set, load_data_set
-from rpl_constraint import RPLConstraint
-from uvc_constraints import g1_constraint, g1_gradient, g1_hessian, g2_constraint, g2_gradient, g2_hessian, \
+from .scipy_constr_opt_factory import scipy_factory
+from .sqp_factory import sqp_factory
+from .auglag_factory import auglag_factory
+from .data_readers import load_and_filter_data_set, load_data_set
+from .rpl_constraint import RPLConstraint
+from .uvc_constraints import g1_constraint, g1_gradient, g1_hessian, g2_constraint, g2_gradient, g2_hessian, \
     positive_x_constraint, positive_x_gradient, positive_x_hessian
 
 

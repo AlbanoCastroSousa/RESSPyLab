@@ -1,15 +1,15 @@
 """@package auglag_factory
 Functions to build augmented Lagrangian optimization problems.
 """
-from rpl_constraint import RPLConstraint
-from uvc_model import error_single_test_uvc
-from RESSPyLab import errorTest_scl
-from log_barrier import LogBarrier
-from reciprocal_barrier import ReciprocalBarrier
-from auglag_gen_solver import AugLagGenSolver
-from steihaug_col import steihaug_col
-from model_minimizer import model_minimizer
-from basic_dumper import BasicDumper
+from .rpl_constraint import RPLConstraint
+from .uvc_model import error_single_test_uvc
+from .RESSPyLab import errorTest_scl
+from .log_barrier import LogBarrier
+from .reciprocal_barrier import ReciprocalBarrier
+from .auglag_gen_solver import AugLagGenSolver
+from .steihaug_col import steihaug_col
+from .model_minimizer import model_minimizer
+from .basic_dumper import BasicDumper
 
 import numpy as np
 
@@ -51,7 +51,7 @@ def auglag_factory(data, x_dump_file, fun_dump_file, model_type, subproblem_solv
     elif barrier_type == 'none':
         b = None
     else:
-        print 'Warning: invalid barrier type, proceeding without a barrier!'
+        print ('Warning: invalid barrier type, proceeding without a barrier!')
         b = None
 
     d = BasicDumper(output_file=x_dump_file, numpy_printopts={'precision': 3, 'suppress': True}, verbose_dump_freq=1,

@@ -1,9 +1,10 @@
 """@package basic_dumper
 Object to periodically write results to screen and file.
 """
+from __future__ import print_function
 import numpy as np
 
-from gensolver_dumper import GenSolverDumper
+from .gensolver_dumper import GenSolverDumper
 
 
 class BasicDumper(GenSolverDumper):
@@ -49,7 +50,7 @@ class BasicDumper(GenSolverDumper):
         f_val = dump_info['f_val']
         norm_grad_lag = dump_info['norm_grad_lag']
         basic_dump_str = "\nIt. = {0}:\tf(x) = {1:e} ; ||grad[L]|| = {2:e}"
-        print basic_dump_str.format(it_num, f_val, norm_grad_lag)
+        print (basic_dump_str.format(it_num, f_val, norm_grad_lag))
 
         # Output more advanced info at specified increments
         if dump_info['it_num'] % self.verbose_dump_freq == 0:
@@ -59,17 +60,17 @@ class BasicDumper(GenSolverDumper):
             # Now display the rest
             for key, value in dump_info.items():
                 if type(value) is np.ndarray:
-                    print key + ' = ', value.reshape(-1)
+                    print (key + ' = ', value.reshape(-1))
                 else:
-                    print key + ' = ', value
+                    print (key + ' = ', value)
 
             # Save x values
             if self.dump_file != '':
                 x = dump_info['x']
-                with open(self.dump_file, 'ab') as f:
+                with open(self.dump_file, 'a') as f:
                     np.savetxt(f, x.reshape((1, len(x))), fmt='%7.6e')
             # Save the iteration, function value, and norm of the gradient of the Lagrangian
             if self.function_file != '':
-                with open(self.function_file, 'ab') as f:
+                with open(self.function_file, 'a') as f:
                     f.write('{0}, {1:5.4e}, {2:5.4e}\n'.format(it_num, f_val, norm_grad_lag))
         return

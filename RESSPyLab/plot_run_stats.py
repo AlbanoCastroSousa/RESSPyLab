@@ -2,7 +2,7 @@
 Function to compare objective function and norm grad L between analyses.
 """
 #import matplotlib.pyplot as plt
-from mpl_import import *
+from .mpl_import import *
 import pandas as pd
 import numpy as np
 

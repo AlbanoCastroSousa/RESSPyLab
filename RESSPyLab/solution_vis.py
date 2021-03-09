@@ -5,13 +5,13 @@ import numpy as np
 import os
 import pandas as pd
 # import matplotlib.pyplot as plt
-from mpl_import import *
+from .mpl_import import *
 import matplotlib.lines as mlines
 
-from vc_parameter_identification import vc_get_hessian
-from posdef_check import posdef_check
-from uvc_model import uvc_get_hessian, error_single_test_uvc
-from RESSPyLab import errorTest_scl
+from .vc_parameter_identification import vc_get_hessian
+from .posdef_check import posdef_check
+from .uvc_model import uvc_get_hessian, error_single_test_uvc
+from .RESSPyLab import errorTest_scl
 
 
 def hess_posdef_range(data, x, x_prct_variation, num_samples, model_type='Original'):
@@ -262,14 +262,14 @@ def solution_visualizations(data, x, x_variation, num_pts, x_labels, model_type,
         where the first value is the lower bound and the second value is the upper bound.
     """
     # Generate the data
-    print 'Checking positive definiteness of the Hessian...'
+    print ('Checking positive definiteness of the Hessian...')
     pos_def_hessian = hess_posdef_range(data, x, x_variation, num_pts, model_type)
     pos_def_hessian.to_csv(os.path.join(save_dir, 'hessian_results.csv'))
-    print 'Generating function surfaces...'
+    print ('Generating function surfaces...')
     surf = gen_function_surfaces(data, x, x_variation, num_pts, model_type)
     save_surf(x_variation, surf, save_dir)
 
     plot_posdef(x_variation, x_labels, pos_def_hessian, plot_dir)
     plot_function_surfaces(x, x_variation, num_pts, surf, plot_dir, x_labels, model_type)
-    print 'Finished!'
+    print ('Finished!')
     return [pos_def_hessian, surf]

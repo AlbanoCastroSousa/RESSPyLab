@@ -5,9 +5,9 @@ import numpy as np
 import numpy.linalg as la
 import warnings
 
-from sqp_solver import SqpSolver
+from .sqp_solver import SqpSolver
 from collections import OrderedDict
-from reduced_cg import reduced_cg
+from .reduced_cg import reduced_cg
 
 
 class SqpTrustregion(SqpSolver):

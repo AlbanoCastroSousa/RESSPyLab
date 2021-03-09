@@ -3,7 +3,7 @@ Implements the logarithmic barrier function.
 """
 import numpy as np
 
-from barrier_function import BarrierFunction
+from .barrier_function import BarrierFunction
 
 
 class LogBarrier(BarrierFunction):

@@ -1,10 +1,11 @@
 """@package aug_lag_gen_solver
 Augmented Lagrangian solver.
 """
+from __future__ import print_function
 import numpy as np
 from numdifftools import nd_algopy as nda
-from barrier_function import BarrierFunction
-from posdef_check import posdef_check
+from .barrier_function import BarrierFunction
+from .posdef_check import posdef_check
 
 EPS_MACHINE = 10. * np.finfo(float).eps  # set to be slightly larger than machine epsilon
 
@@ -271,11 +272,11 @@ class AugLagGenSolver:
             if convergence_criteria < tol:
                 break
             elif delta < min_trust_radius(x):
-                print " WARNING: exiting NTR-J because of too small search radius."
+                print (" WARNING: exiting NTR-J because of too small search radius.")
                 break
             elif self.accepting_approx_its and np.linalg.norm(x_trajectory) < tol_approx and delta < tol_approx:
-                print " WARNING: SECONDARY CONVERGENCE CRITERIA TRIGGERED. NORM OF GRADIENT NOT WITHIN TOLERANCE, " \
-                      "THUS ONLY AN APPROXIMATE SOLUTION IS OBTAINED"
+                print (" WARNING: SECONDARY CONVERGENCE CRITERIA TRIGGERED. NORM OF GRADIENT NOT WITHIN TOLERANCE, ",
+                      "THUS ONLY AN APPROXIMATE SOLUTION IS OBTAINED")
                 break
 
         return [x, delta, nit]
@@ -367,34 +368,34 @@ class AugLagGenSolver:
 
             # Check that gradient is nearly 0, and all the constraints are satisfied
             if np.linalg.norm(grad_lagrangian) < tol and ineqaulity_constraint_norm < tol:
-                print "####################################################"
-                print "### SUCCESSFUL AUGMENTED LAGRANGIAN OPTIMIZATION ###"
-                print "####################################################"
-                print "########## TERMINATING AUGMENTED LAGRANGIAN ########"
-                print "####################################################"
+                print ("####################################################")
+                print ("### SUCCESSFUL AUGMENTED LAGRANGIAN OPTIMIZATION ###")
+                print ("####################################################")
+                print ("########## TERMINATING AUGMENTED LAGRANGIAN ########")
+                print ("####################################################")
                 print ("x = ", x)
                 break
             elif Delta2 < min_trust_radius(x):
-                print "####################################################"
-                print "###### EXITING BECAUSE OF TRUST REGION RADIUS ######"
-                print "####################################################"
+                print ("####################################################")
+                print ("###### EXITING BECAUSE OF TRUST REGION RADIUS ######")
+                print ("####################################################")
                 print ("x = ", x)
                 break
             elif self.total_iterations >= self.maximum_total_iterations:
-                print "####################################################"
-                print "######## EXITING BECAUSE OF TOTAL ITERATIONS #######"
-                print "####################################################"
+                print ("####################################################")
+                print ("######## EXITING BECAUSE OF TOTAL ITERATIONS #######")
+                print ("####################################################")
                 print ("x = ", x)
                 break
             elif self.accepting_approx_its and step_size < tol_approx and Delta2 < tol_approx:
-                print " WARNING: SECONDARY CONVERGENCE CRITERIA TRIGGERED. NORM OF GRADIENT NOT WITHIN TOLERANCE."
-                print " ONLY AN APPROXIMATE SOLUTION IS OBTAINED"
+                print (" WARNING: SECONDARY CONVERGENCE CRITERIA TRIGGERED. NORM OF GRADIENT NOT WITHIN TOLERANCE.")
+                print (" ONLY AN APPROXIMATE SOLUTION IS OBTAINED")
                 num_of_approx_it = num_of_approx_it + 1
                 trust_radius = 1.0
                 if num_of_approx_it > approx_it_limit:
-                    print "####################################"
-                    print "# TERMINATING AUGMENTED LAGRANGIAN #"
-                    print "####################################"
+                    print ("####################################")
+                    print ("# TERMINATING AUGMENTED LAGRANGIAN #")
+                    print ("####################################")
                     print ("x = ", x)
                     break
 
