@@ -120,7 +120,7 @@ def VCsimCurve(x_sol, testClean):
                 # print ('Warning convergence not reached in nonlinear loop!!!')
 
         sigma_SimN = sigma * 1.0
-        sigma_testN = testClean['Sigma_true'].iloc[lineCounter]
+        #sigma_testN = testClean['Sigma_true'].iloc[lineCounter]
 
         e_true_calc.append(e)
         sigma_calc.append(sigma)
@@ -132,9 +132,9 @@ def VCsimCurve(x_sol, testClean):
 
         # Square of the area under the increment with the trapezoidal rule
 
-        Phi_test = Phi_test + np.abs(de) * ((sigma_SimN - sigma_testN) ** 2 + (sigma_SimN_1 - sigma_testN_1) ** 2) / 2.
+        #Phi_test = Phi_test + np.abs(de) * ((sigma_SimN - sigma_testN) ** 2 + (sigma_SimN_1 - sigma_testN_1) ** 2) / 2.
 
-    Phi_test = Phi_test / sum_abs_de
+    #Phi_test = Phi_test / sum_abs_de
 
     simCurve = pd.DataFrame(np.array([e_true_calc, sigma_calc]).transpose(), columns=['e_true', 'Sigma_true'])
 
