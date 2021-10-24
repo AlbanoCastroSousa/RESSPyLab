@@ -93,7 +93,7 @@ def vc_tensile_opt_scipy(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_inf
     g6_sup_constr = opt.NonlinearConstraint(g_6_high.f, constr_lb, constr_ub, jac=g_6_high.gf, hess=g_6_high.hf)
 
     # Make the tuple of constraints
-    n_backstresses = int((len(x_0) - 4) // 2)
+    n_backstresses = int((len(x_0) - 4) / 2)
     if n_backstresses == 2:
         constraints = (g3_inf_constr, g3_sup_constr, g4_inf_constr, g4_sup_constr, g5_inf_constr, g5_sup_constr,
                        g6_inf_constr, g6_sup_constr)
@@ -158,7 +158,7 @@ def vc_tensile_opt_auglag(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yield_in
                    'rho_gamma_inf': rho_gamma_b_inf, 'rho_gamma_sup': rho_gamma_b_sup,
                    'rho_gamma_12_inf': rho_gamma_12_inf, 'rho_gamma_12_sup': rho_gamma_12_sup}
     # Set-up constraints
-    n_backstresses = int((len(x_0) - 4) // 2)
+    n_backstresses = int((len(x_0) - 4) / 2)
     if n_backstresses == 2:
         constraint_dict = {'constants': g_constants, 'variables': {},
                            'functions': [g3_vco_lower, g3_vco_upper, g4_vco_lower, g4_vco_upper,
@@ -237,7 +237,7 @@ def vc_tensile_opt_linesearch(x_0, file_list, rho_iso_inf, rho_iso_sup, rho_yiel
                    'rho_gamma_inf': rho_gamma_b_inf, 'rho_gamma_sup': rho_gamma_b_sup,
                    'rho_gamma_12_inf': rho_gamma_12_inf, 'rho_gamma_12_sup': rho_gamma_12_sup}
     # Set-up constraints
-    n_backstresses = int((len(x_0) - 4) // 2)
+    n_backstresses = int((len(x_0) - 4) / 2)
     if n_backstresses == 2:
         constraint_dict = {'constants': g_constants, 'variables': {},
                            'functions': [g3_vco_lower, g3_vco_upper, g4_vco_lower, g4_vco_upper,
@@ -300,7 +300,7 @@ def make_feasible(x_0, c):
         - x_0 should follow: x0 = [200000, 355, 1, 1, 1, 1] for one backstress
         - x_0 should follow: x0 = [200000, 355, 1, 1, 1, rho_gamma_12_inf, 1, 1] for two backstresses
     """
-    n_backstresses = int((len(x_0) - 4) // 2)
+    n_backstresses = int((len(x_0) - 4) / 2)
     # Get the average of the bounds
     rho_yield_avg = 0.5 * (c['rho_yield_inf'] + c['rho_yield_sup'])
     rho_iso_avg = 0.5 * (c['rho_iso_inf'] + c['rho_iso_sup'])
@@ -320,7 +320,7 @@ def make_feasible(x_0, c):
 def vc_constraint_check(x_opt, rho_iso_inf, rho_iso_sup, rho_yield_inf, rho_yield_sup, rho_gamma_b_inf,
                         rho_gamma_b_sup):
     """ Checks if each of g_3, g_4, and g_5 were satisfied. """
-    n_backstresses = int((len(x_opt) - 4) // 2)
+    n_backstresses = int((len(x_opt) - 4) / 2)
     sum_c_gamma = 0.
     for i in range(n_backstresses):
         sum_c_gamma += x_opt[4 + 2 * i] / x_opt[5 + 2 * i]

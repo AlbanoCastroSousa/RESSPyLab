@@ -12,7 +12,7 @@ def g_constraint(x, ep):
     :param float ep: Plastic strain value.
     :return float: Value of g.
     """
-    n_backstresses = int(len(x) - 6) / 2
+    n_backstresses = int((len(x) - 6) / 2)
 
     g = x[4] * x[5] * np.exp(-x[5] * ep) - x[2] * x[3] * np.exp(-x[3] * ep)
     for i in range(0, n_backstresses):
@@ -29,7 +29,7 @@ def g_gradient(x, ep):
     :param float ep: Plastic strain value.
     :return np.array: (n, 1) Gradient of g, n = len(x).
     """
-    n_backstresses = int(len(x) - 6) / 2
+    n_backstresses = int((len(x) - 6) / 2)
 
     grad = np.zeros((len(x), 1))
     grad[2] = -x[3] * np.exp(-x[3] * ep)
@@ -51,7 +51,7 @@ def g_hessian(x, ep):
     :param float ep: Plastic strain value.
     :return np.array: (n, n) Hessian of g, n = len(x).
     """
-    n_backstresses = int(len(x) - 6) / 2
+    n_backstresses = int((len(x) - 6) / 2)
     hess = np.zeros((len(x), len(x)))
 
     # row 2
@@ -136,7 +136,7 @@ def g2_gradient(x, constants, variables):
     :param dict variables: Defines constraint values that depend on x.
     :return float: Value of the constraint in standard form.
     """
-    n_backstresses = int(len(x) - 6) / 2
+    n_backstresses = int((len(x) - 6) / 2)
 
     grad = np.zeros((len(x), 1))
     grad[2] = x[3] ** 2
@@ -159,7 +159,7 @@ def g2_hessian(x, constants, variables):
     :param dict variables: Defines constraint values that depend on x.
     :return float: Value of the constraint in standard form.
     """
-    n_backstresses = int(len(x) - 6) / 2
+    n_backstresses = int((len(x) - 6) / 2)
 
     hess = np.zeros((len(x), len(x)))
     # 2nd row
