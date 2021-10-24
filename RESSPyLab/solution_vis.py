@@ -146,7 +146,7 @@ def plot_function_surfaces(x, x_prct_variation, num_samples, function_values, pl
         f = []
 
         def constr(x2):
-            n_backstresses = int(len(x2) - 6) / 2
+            n_backstresses = int((len(x2) - 6) / 2)
             g = x2[4] * x2[5] - x2[2] * x2[3]
             for ii in range(0, n_backstresses):
                 ck_ind = 6 + 2 * ii
